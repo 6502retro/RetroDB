@@ -6,7 +6,7 @@ random.seed(7)
 def word(n): return ''.join(random.choice('abcdefghij klmnop') for _ in range(n)).strip() or 'x'
 F = [('Name', 'Text', 50, 1), ('Code', 'Text', 8, 1), ('Qty', 'Number', 0, 1), ('Cost', 'Money', 0, 1),
      ('Note', 'Text', 56, 0), ('More', 'Text', 56, 0), ('Day', 'Date', 0, 1), ('Ok', 'Yes/No', 0, 1)]
-# record size 51+9+4+4+57+57+11+1 = 194: pool A holds 1, the rest spill from aux into pool B
+# record size 51+9+4+4+57+57+11+1 = 194: too many for aux, so the rest spill into pool B
 R = []
 for i in range(245):
     R.append(['Item %03d %s' % (i, word(20)), str(random.randint(0, 99999)), str(random.randint(-500, 500)),
@@ -22,7 +22,7 @@ for line in open('build/mousedb.lbl'):
     _, v, n = line.split(); L[n[1:]] = int(v, 16)
 bk = [a.main[L['PTRBK'] if 'PTRBK' in L else 0x0A00 + i] for i in range(200)]
 bk = list(a.main[0x0A00:0x0A00 + 245]); hi = list(a.main[0x0900:0x0900 + 245])
-check('records in all three pools: main A, aux, main B', bk[0] == 0 and 1 in bk and bk[-1] == 0 and hi[-1] >= 0x90)
+check('records in aux and then main pool B', bk[1] == 1 and bk[-1] == 0 and hi[-1] >= 0x90)
 def saved():
     a.key('S', oa=True); a.run()
     l = lines(V, 'BIG'); nf = int(l[1]); n = int(l[2 + nf])
@@ -98,7 +98,9 @@ a.key('\r'); a.run(); a.key('code\r'); a.run()
 check('duplicate name refused (any case)', 'Two fields have the same name' in a.plain())
 a.key('\r'); a.run(); a.key(0x1B); a.run()
 # editing the record in main memory, then drawing records in aux memory
-fresh(V); open(V + '/BIG', 'wb').write(dbfile('BIG', F, R[:20])); open(V + '/MOUSEDB.LAST', 'wb').write(b'BIG\r')
+# (a smaller form, so that pool A holds the first record)
+F2 = F[:5] + [('More', 'Text', 20, 0)] + F[6:]
+fresh(V); open(V + '/BIG', 'wb').write(dbfile('BIG', F2, R[:20])); open(V + '/MOUSEDB.LAST', 'wb').write(b'BIG\r')
 a = start(V)
 check('record 0 is in main memory, record 1 in aux', a.main[0x0A00] == 0 and a.main[0x0A01] == 1)
 a.key('\r'); a.run(); a.key('\t\t'); a.key(0x18); a.key('8\r'); a.run()

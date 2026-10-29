@@ -144,9 +144,7 @@ mc_ref:    .byte 0
 mseteof_p: .byte 2
 mse_ref:   .byte 0
            .byte 0, 0, 0
-msetmark_p: .byte 2
-msm_ref:   .byte 0
-msm_pos:   .byte 0, 0, 0
+sd_skip:   .byte 0
 mark_p:    .byte 2, 0, 0, 0, 0
 
         .segment "LCODE"
@@ -377,8 +375,8 @@ cmd_export:
         jmp @ncol
 @t8:    ldx ex_col
         lda fkind,x
-        jsr isnumk
-        bcc @ncol
+        cmp ex_tk
+        bne @ncol
         jsr wr_sum
 @ncol:  inc ex_col
         lda ex_col
@@ -419,8 +417,21 @@ cmd_export:
         ldy #>al_expmsg
         jmp alert
 
-; hasnum: carry set if the form has a Number or Money field
-hasnum: ldx #0
+; hasnum: carry set if the form has a Number or Money field.  ex_tk =
+; the kind the Total row adds up: Money when there is any (so a Year
+; number is not summed beside the dollars), otherwise Number.
+hasnum: lda #K_NUMBER
+        sta ex_tk
+        ldx #0
+@m:     cpx nfields
+        bcs @h
+        lda fkind,x
+        cmp #K_MONEY
+        beq @mm
+        inx
+        bne @m
+@mm:    sta ex_tk
+@h:     ldx #0
 @l:     cpx nfields
         bcs @no
         lda fkind,x
@@ -1978,12 +1989,6 @@ scandir:
         bcc @o
         rts
 @o:     jsr msetrefs
-        lda mo_ref
-        sta msm_ref
-        lda sd_blk              ; mark = block * 512
-        asl a
-        sta msm_pos+1
-        MLICALL $CE, msetmark_p
         lda #<DIRBUF
         sta mr_buf
         lda #>DIRBUF
@@ -1994,6 +1999,14 @@ scandir:
         sta mr_req+1
         lda ndir
         sta sd_start
+        lda sd_blk              ; read past the blocks already scanned
+        sta sd_skip             ; (more dependable than SET_MARK on a folder)
+@skp:   lda sd_skip
+        beq @blk
+        MLICALL $CA, mread_p
+        jcs @end
+        dec sd_skip
+        jmp @skp
 @blk:   MLICALL $CA, mread_p
         jcs @end
         lda #<(DIRBUF+4)        ; ptr1 = entry sd_ent
@@ -2236,6 +2249,7 @@ ob_x:    .res 1
 ex_col:  .res 1
 ex_i:    .res 1
 ex_tl:   .res 1
+ex_tk:   .res 1
 c_row:   .res 1
 wh_n:    .res 1
 wh_b:    .res 1

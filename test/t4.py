@@ -34,8 +34,8 @@ check('sheet: headings', '1 "Title" | "Maker" | "Year" | "Price" | "Bought" | "B
 check('sheet: a row', '2 "Karateka" | "Broderbund" | 1984 | 25/f8 | "1990-05-01" | "Yes"' in out)
 check('sheet: negatives', '6 "Ultima IV" | "Origin" | -1985 | -5/f8 | "1992-02-29" | "Yes"' in out)
 check('sheet: blanks left empty', '4 "Oregon Trail" | "MECC" | 1985 | 20/f8 | "1991" | ' in out)
-check('sheet: totals', '8 "Total" |  | +SUM(C2...C6)=5947 | +SUM(D2...D6)=115.5 |  | ' in out)
-check('sheet: formulas evaluate to their cached totals', 'eval C8 5947 cached 5947' in out and 'eval D8 115.5 cached 115.5' in out)
+check('sheet: totals (Money only, not Year)', '8 "Total" |  |  | +SUM(D2...D6)=115.5 |  | ' in out)
+check('sheet: formulas evaluate to their cached totals', 'eval D8 115.5 cached 115.5' in out and 'C8' not in out)
 check('sheet: widths', 'widths 25,13,11,13,11,6' in out)
 check('sheet: same bytes as the Mouse Calc Converter writes', 'rebuilt identical: true' in out)
 # exporting again asks before replacing; refuses other files

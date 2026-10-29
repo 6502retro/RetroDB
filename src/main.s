@@ -429,8 +429,8 @@ drawnoform:
 
         .segment "RODATA"
 s_noform1: .byte "This database has no form yet.", 0
-s_noform2: .byte "Choose Design Form from the File menu to set up", 0
-s_noform3: .byte "its fields, or Open to choose another database.", 0
+s_noform2: .byte "Choose Design Form from the File menu to set up its", 0
+s_noform3: .byte "fields, or Import from Mouse Calc to start from a sheet.", 0
         .segment "CODE"
 
 ; drawrow: A = view position, cy = row

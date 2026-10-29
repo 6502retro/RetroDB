@@ -18,8 +18,8 @@ os.makedirs(out, exist_ok=True)
 
 # an address book (the people are made up)
 db(out + '/ADDRESSES',
-   [('Name', 'Text', 24, 1), ('Company', 'Text', 18, 0), ('Phone', 'Text', 14, 1),
-    ('City', 'Text', 16, 1), ('State', 'Text', 2, 1), ('Birthday', 'Date', 0, 1),
+   [('Name', 'Text', 24, 1), ('Company', 'Text', 18, 0), ('Phone', 'Text', 12, 1),
+    ('City', 'Text', 13, 1), ('State', 'Text', 2, 1), ('Birthday', 'Date', 0, 1),
     ('Email', 'Text', 30, 0), ('Card', 'Yes/No', 0, 1), ('Notes', 'Text', 40, 0)],
    [['Ada Brightwater', 'Clockwork Co.', '555-0101', 'Portland', 'OR', '1984-01-24', 'ada@example.com', 'Yes', 'Met at KansasFest'],
     ['Ben Okafor', '', '555-0142', 'Austin', 'TX', '1979-06-11', 'ben@example.com', 'Yes', ''],
