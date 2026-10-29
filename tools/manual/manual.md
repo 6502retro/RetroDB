@@ -12,7 +12,7 @@ by 6502Retro
 
 ### Notice
 
-RetroDB is new software written for this release. It was modeled on the way PFS:File (Software Publishing Corporation, 1982) organizes information into forms, but it contains no code or text from that program, and it is not affiliated with Software Publishing Corporation. Mouse Calc is a product of Version Soft. Apple, Apple IIe, Apple IIc, Apple IIGS and ProDOS are trademarks of Apple Inc.
+RetroDB is new software written for this release. Its first version was called MouseDB. It was modeled on the way PFS:File (Software Publishing Corporation, 1982) organizes information into forms, but it contains no code or text from that program, and it is not affiliated with Software Publishing Corporation. Mouse Calc is a product of Version Soft. Apple, Apple IIe, Apple IIc, Apple IIGS and ProDOS are trademarks of Apple Inc.
 
 RetroDB is provided as is, without warranty of any kind. Keep backup copies of your disks and your databases. See the LICENSE file on the source disk for the terms under which RetroDB may be copied and shared.
 
@@ -509,7 +509,7 @@ Choose By Part Of from the Sort menu to see the database as a tree. Each record 
 - **Import with Add** moves the sheet's numbers past the largest No. already in use. The new records keep their links to each other, and any repeated number is replaced with a free one.
 - **Create** makes columns headed No. and Part Of into fields of those types, so a database exported from RetroDB comes back with its tree.
 
-> **Important!** RetroDB 1.0 can't open a database that has a No. or Part Of field. Use RetroDB 1.1 or later for those databases.
+> **Important!** MouseDB 1.0, the first version of RetroDB, can't open a database that has a No. or Part Of field. Use RetroDB 1.1 or later for those databases.
 
 ## Appendix A: Command Summary
 
@@ -661,7 +661,7 @@ RETRODB1
 ""
 ```
 
-- Line 1 is `RETRODB1`, and line 2 the number of fields.
+- Line 1 is `RETRODB1`, and line 2 the number of fields. Databases saved by MouseDB, as RetroDB was first called, begin with MOUSEDB1; RetroDB opens them too and saves them as RETRODB1.
 - Each field is a line of name, type (1 Text, 2 Number, 3 Money, 4 Date, 5 Yes/No, 6 No., 7 Part Of), length (for Text, the length you chose; for other types, the width of the column) and In list (1 or 0).
 - Then comes the number of records, and each record as one quoted line per field. Numbers are written plainly (`1985`, `-5`), Money with two decimals (`125.50`), dates as YYYY-MM-DD, and Yes/No as `Yes`, `No` or empty. No. and Part Of are written as numbers, and empty when blank.
 
@@ -676,7 +676,7 @@ Mouse Calc sheets are ProDOS files of type $F8. RetroDB writes Mouse Calc 1.1's 
 | RETRODB.SYSTEM | The program |
 | RETRODB.LAST | The name of the last database used |
 | RETRODB.SAVING | A temporary file during Save; it is renamed when the save is complete |
-| Your databases | TXT files beginning with RETRODB1 |
+| Your databases | TXT files beginning with RETRODB1 (or MOUSEDB1) |
 | Your sheets | $F8 Mouse Calc files |
 
 ## Appendix D: Troubleshooting
