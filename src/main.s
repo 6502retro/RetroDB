@@ -1,5 +1,5 @@
 ; ---------------------------------------------------------------
-; MouseDB 1.0 - a forms database for the Apple II
+; MouseDB 1.1 - a forms database for the Apple II
 ; by 6502Retro.  ProDOS 8 system program, 80-column MouseText UI.
 ; Built on the RetroInv 2.5 engine.
 ; ---------------------------------------------------------------
@@ -7,21 +7,13 @@
         .macpack longbranch
         .include "defs.inc"
 
-; The first 8K of the file is the hi-res splash, displayed straight from
-; where ProDOS loads it ($2000).  Its first three bytes are a JMP; the real
-; picture bytes are put back before graphics are switched on.
-        .segment "SPLASH"
+; ProDOS loads the file at $2000 and starts it there: LCODE begins
+; with a JMP to start.
+        .segment "LCODE"
         jmp start
-        .incbin "../build/splash.bin", 3
 
         .segment "CODE"
 start:  cld
-        lda #SPL0
-        sta $2000
-        lda #SPL1
-        sta $2001
-        lda #SPL2
-        sta $2002
         sta KBDSTRB
         ; need an enhanced IIe, IIc or IIgs (MouseText + 80 columns)
         lda $FBB3
@@ -30,14 +22,6 @@ start:  cld
         lda $FBC0
         cmp #$EA
         jeq badmachine
-        ; show the splash
-        sta CLR80STORE
-        sta CLR80COL
-        sta DHIRESOFF
-        sta MIXCLR
-        sta HIRES
-        sta LOWSCR
-        sta TXTCLR
         lda #0
         sta curon
         sta hasmouse
@@ -47,9 +31,24 @@ start:  cld
         lda #$FF
         sta mopen
         jsr initmouse
+        jsr auxinit             ; (before the picture: it borrows aux memory)
+        jsr fixprefix
+        lda auxok
+        beq @text               ; no auxiliary memory free: no picture
+        sec                     ; LCODE ($2000-$3FFF) -> aux $0800
+        jsr lcswap
+        jsr unsplash
+        sta CLR80STORE          ; show the title picture
+        sta CLR80COL
+        sta DHIRESOFF
+        sta MIXCLR
+        sta HIRES
+        sta LOWSCR
+        sta TXTCLR
         jsr splashwait
-        jsr movelcode
-        ; switch to 80-column MouseText text
+        clc                     ; and LCODE back
+        jsr lcswap
+@text:  ; switch to 80-column MouseText text
         sta TXTSET
         sta LORES
         sta SET80COL
@@ -61,8 +60,6 @@ start:  cld
         PRTS "Loading"
         lda #G_DOTS
         jsr putch
-        jsr auxinit
-        jsr fixprefix
         lda #0
         sta count
         sta vcount
@@ -94,36 +91,103 @@ start:  cld
         jsr alert
 @go:    jmp mainloop
 
-; movelcode: copy LCODE from where ProDOS loaded it to $2000 (over the
-; title picture, which is no longer needed)
-movelcode:
-        lda #<__LCODE_LOAD__
+; lcswap: carry set = main $2000-$3FFF -> aux $0800-$27FF (put LCODE
+; aside), clear = back again
+lcswap: php
+        lda #<$2000
+        ldx #<$0800
+        plp
+        php
+        bcs @out
+        sta A4L                 ; aux $0800 -> main $2000
+        lda #>$2000
+        sta A4L+1
+        stx A1L
+        lda #>$0800
+        sta A1L+1
+        lda #<$27FF
+        sta A2L
+        lda #>$27FF
+        sta A2L+1
+        jmp @go
+@out:   sta A1L                 ; main $2000 -> aux $0800
+        lda #>$2000
+        sta A1L+1
+        lda #<$3FFF
+        sta A2L
+        lda #>$3FFF
+        sta A2L+1
+        stx A4L
+        lda #>$0800
+        sta A4L+1
+@go:    plp
+        jmp auxmv
+
+; unsplash: unpack the title picture into $2000-$3FFF.  Tokens: t < $80:
+; t+1 literal bytes; t >= $80: (t & $7F) + 3 bytes copied from a 2-byte
+; distance back.
+unsplash:
+        lda #<splashlz
         sta ptr1
-        lda #>__LCODE_LOAD__
+        lda #>splashlz
         sta ptr1+1
-        lda #<__LCODE_RUN__
+        lda #<$2000
         sta ptr2
-        lda #>__LCODE_RUN__
+        lda #>$2000
         sta ptr2+1
-        ldx #>__LCODE_SIZE__
         ldy #0
-@pg:    cpx #0
-        beq @last
-@l:     lda (ptr1),y
+@tok:   lda ptr2+1
+        cmp #$40
+        bcs @d
+        jsr @get
+        cmp #$80
+        bcs @match
+        tax
+        inx
+@lit:   jsr @get
         sta (ptr2),y
-        iny
-        bne @l
-        inc ptr1+1
-        inc ptr2+1
+        jsr @inc2
         dex
-        jmp @pg
-@last:  cpy #<__LCODE_SIZE__
-        beq @d
-        lda (ptr1),y
+        bne @lit
+        beq @tok
+@match: and #$7F
+        clc
+        adc #3
+        tax
+        jsr @get
+        sta t0
+        jsr @get
+        sta t1
+        sec
+        lda ptr2
+        sbc t0
+        sta ptr3
+        lda ptr2+1
+        sbc t1
+        sta ptr3+1
+@m:     lda (ptr3),y
         sta (ptr2),y
-        iny
-        bne @last
+        inc ptr3
+        bne @m2
+        inc ptr3+1
+@m2:    jsr @inc2
+        dex
+        bne @m
+        beq @tok
 @d:     rts
+@get:   lda (ptr1),y
+        inc ptr1
+        bne @g
+        inc ptr1+1
+@g:     rts
+@inc2:  inc ptr2
+        bne @i
+        inc ptr2+1
+@i:     rts
+
+        .segment "RODATA"
+splashlz: .incbin "../build/splash.lz"
+        .segment "CODE"
 
 ; clearform: an empty database with no fields
 clearform:
@@ -143,6 +207,7 @@ clearform:
 
 ; formchanged: after the fields change - list columns, Sort menu
 formchanged:
+        jsr nestf
         jsr calccols
         jmp buildsortmenu
 
@@ -460,6 +525,7 @@ drawrow:
         ldx lc_f,y
         jsr getfk
         jsr f2t
+        jsr tr_indent
         lda fk_k
         jsr isnumk
         lda #0
@@ -991,7 +1057,10 @@ domenucmd:
         rts                     ; (the menu put the screen back)
 
 ; docmd: A = command
-docmd:  cmp #CMD_SORT0
+docmd:  pha
+        jsr notab_inval
+        pla
+        cmp #CMD_SORT0
         bcc @t
         cmp #CMD_SORT0+MAXFIELDS
         bcs @t
@@ -1071,7 +1140,14 @@ cmd_dup:
         lda VIEW,x
         jsr recget
         jsr rec2txt
-        lda #<t_dup
+        ldx nf_no               ; the copy gets a No. of its own
+        cpx #$FF
+        beq @t
+        jsr etptr
+        lda #0
+        tay
+        sta (ptr2),y
+@t:     lda #<t_dup
         ldy #>t_dup
         jmp addrec
 @x:     rts
@@ -1084,6 +1160,7 @@ addrec: ldx #$FF
         lda count
         jsr recgetw
         jsr edit2rec
+        jsr assignno
         jsr recput
         ldx vcount
         lda count
@@ -1093,6 +1170,8 @@ addrec: ldx #$FF
         inc count
         lda #1
         sta dirty
+        jsr notab_inval
+        jsr retree
 @x:     lda #2
         sta redraw
         rts
@@ -1115,6 +1194,8 @@ cmd_edit:
         jsr recput
         lda #1
         sta dirty
+        jsr notab_inval
+        jsr retree
 @x:     lda #2
         sta redraw
         rts
@@ -1129,7 +1210,20 @@ cmd_delete:
         ldx sel
         lda VIEW,x
         jsr mb_recname
-        lda #<al_delete
+        ldx sel                 ; records inside it?
+        lda VIEW,x
+        jsr kids
+        beq @nk
+        pha
+        lda #<s_kids1
+        ldy #>s_kids1
+        jsr mb_str
+        pla
+        jsr mb_num8
+        lda #<s_kids2
+        ldy #>s_kids2
+        jsr mb_str
+@nk:    lda #<al_delete
         ldy #>al_delete
         jsr alert
         cmp #0
@@ -1137,6 +1231,8 @@ cmd_delete:
         ldx sel
         lda VIEW,x
         jsr delrec
+        jsr unlink
+        jsr retree
         lda #1
         sta dirty
 @x:     lda #2
@@ -1156,9 +1252,12 @@ mb_recname:
         jsr recget
         ldx mr_f
         jsr getfk
+        lda fk_k                ; (not the No.)
+        cmp #K_NO
+        beq @nx
         jsr f2t
         bne @got
-        inc mr_f
+@nx:    inc mr_f
         bne @f
 @got:   cmp #36
         bcc @c
@@ -1196,6 +1295,7 @@ delrec: sta dl_d
         lda t4
         sta PTRBK,x
         dec count
+        jsr notab_inval
         lda dl_d
         jmp viewdel
 
@@ -1236,9 +1336,13 @@ cmd_delsel:
         lda VIEW,x
         jsr delrec
         jmp @l
-@done:  lda #0
+@done:  jsr unlink
+        lda #0
         sta selactive
-        jsr showall
+        jsr treeon
+        bcc @nt
+        jsr dotree
+@nt:    jsr showall
         lda #0
         sta sel
         sta top
@@ -1340,6 +1444,8 @@ t_dup:     .byte "Duplicate Record", 0
 t_alert:   .byte "MouseDB", 0
 s_saving:  .byte "Saving", G_DOTS, 0
 s_delq:    .byte "Delete this record?||", 0
+s_kids1:   .byte "||It holds ", 0
+s_kids2:   .byte " records. They stay,|no longer part of anything.", 0
 s_delsel1: .byte "Delete the ", 0
 s_delsel2: .byte " selected|records? This can't be undone.", 0
 s_delall1: .byte "Delete all ", 0
@@ -1354,7 +1460,7 @@ s_full:    .byte "The disk is full.", 0
 s_io:      .byte "Disk I/O error.", 0
 s_perr:    .byte "ProDOS error $", 0
 s_notdb:   .byte "It isn't a MouseDB database.", 0
-s_about:   .byte "MouseDB 1.0 for the Apple II||"
+s_about:   .byte "MouseDB 1.1 for the Apple II||"
            .byte "A forms database in the spirit|"
            .byte "of PFS:File, by 6502Retro", 0
 s_fullm:   .byte "The database is full. Start a|"
@@ -1463,4 +1569,5 @@ FINDSTR:  .res 22
         .include "file.s"
         .include "dbfile.s"
         .include "mcalc.s"
+        .include "nest.s"
 

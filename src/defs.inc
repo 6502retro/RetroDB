@@ -1,5 +1,5 @@
 ; ---------------------------------------------------------------
-; MouseDB 1.0 - definitions
+; MouseDB 1.1 - definitions
 ; ---------------------------------------------------------------
 
 MLI       = $BF00
@@ -62,7 +62,7 @@ mrom      = $7C         ; 2 bytes ($Cn00)
 mjmp      = $7E         ; 2 bytes
 
 ; ---------------------------------------------------------------
-; the form: up to 16 fields of five kinds
+; the form: up to 16 fields of seven kinds
 ; ---------------------------------------------------------------
 MAXFIELDS = 16
 K_TEXT    = 1           ; 1+len bytes, length-prefixed
@@ -70,7 +70,9 @@ K_NUMBER  = 2           ; 4 bytes, signed whole number
 K_MONEY   = 3           ; 4 bytes, signed cents
 K_DATE    = 4           ; 1+10 bytes, YYYY, YYYY-MM or YYYY-MM-DD
 K_YESNO   = 5           ; 1 byte, 0 blank, 1 Yes, 2 No
-NKINDS    = 5
+K_NO      = 6           ; 2 bytes, record number 1-999 (0 blank)
+K_PARTOF  = 7           ; 2 bytes, the No. of the record it is in
+NKINDS    = 7
 MAXTEXT   = 56          ; longest Text field
 MAXNAME   = 15          ; longest field name
 MAXRECSZ  = 255         ; longest record
@@ -100,11 +102,14 @@ ROWSKIP   = SCRATCH+220 ; 32 bytes: rows of an imported sheet to leave out
 PREFIXBUF = $0300       ; page 3 ($0300-$03CF) is free under ProDOS:
 mc_path   = $0342       ; 66 bytes each
 colmap    = $0384       ; 64 bytes
-        .import __LCODE_LOAD__, __LCODE_RUN__, __LCODE_SIZE__
+        .import __LCODE_RUN__, __LCODE_SIZE__
         .import __XBSS_RUN__, __XBSS_SIZE__
+        .import __DATA_RUN__, __DATA_SIZE__
 POOLA     = __XBSS_RUN__ + __XBSS_SIZE__  ; main memory left after LCODE
 POOLA_END = $4000
-POOLB     = __LCODE_LOAD__                ; free once LCODE has moved
+TBASE     = __DATA_RUN__ + __DATA_SIZE__  ; nesting tables (nest.s)
+TBSIZE    = 3 * 250 + 128 + 64            ; NOLO NOHI DEPTH NOMAP FAKEREC
+POOLB     = TBASE + TBSIZE                ; main memory after the program
 AUXPOOL   = $0800       ; record pool in auxiliary memory
 AUXPOOL_END = $C000
 FILEBUF   = $BB00       ; ProDOS file buffer, $BB00-$BEFF

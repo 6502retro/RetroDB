@@ -40,16 +40,18 @@ kindwidth:
         rts
 
         .segment "RODATA"
-;              -  Text Num Money Date Y/N
-ksize:  .byte  0, 0,   4,  4,    11,  1
-kwidth: .byte  0, 0,   10, 12,   10,  3
+;              -  Text Num Money Date Y/N No. PartOf
+ksize:  .byte  0, 0,   4,  4,    11,  1,  2,  2
+kwidth: .byte  0, 0,   10, 12,   10,  3,  4,  20
 kn1:    .byte "Text", 0
 kn2:    .byte "Number", 0
 kn3:    .byte "Money", 0
 kn4:    .byte "Date", 0
 kn5:    .byte "Yes/No", 0
-knlo:   .byte <kn1, <kn1, <kn2, <kn3, <kn4, <kn5
-knhi:   .byte >kn1, >kn1, >kn2, >kn3, >kn4, >kn5
+kn6:    .byte "No.", 0
+kn7:    .byte "Part Of", 0
+knlo:   .byte <kn1, <kn1, <kn2, <kn3, <kn4, <kn5, <kn6, <kn7
+knhi:   .byte >kn1, >kn1, >kn2, >kn3, >kn4, >kn5, >kn6, >kn7
 s_yes:  .byte "Yes", 0
 s_no:   .byte "No", 0
         .segment "CODE"
@@ -125,6 +127,8 @@ fnameptr:
 f2t:    lda #0
         sta f2_n
         lda fk_k
+        cmp #K_NO
+        jcs f2t_nest
         cmp #K_NUMBER
         beq @num
         cmp #K_MONEY
@@ -246,7 +250,13 @@ negnum: ldx #0
 isblank:
         ldy fk_o
         lda fk_k
-        cmp #K_NUMBER
+        cmp #K_NO
+        bcc @k
+        lda (rp),y              ; No., Part Of: both bytes 0
+        iny
+        ora (rp),y
+        rts
+@k:     cmp #K_NUMBER
         beq @n
         cmp #K_MONEY
         beq @n
@@ -271,7 +281,13 @@ fblank: ldy fk_o
         lda #0
         sta (rp),y
         lda fk_k
-        cmp #K_NUMBER
+        cmp #K_NO
+        bcc @k
+        iny
+        lda #0
+        sta (rp),y
+        rts
+@k:     cmp #K_NUMBER
         beq @n
         cmp #K_MONEY
         bne @d
@@ -293,6 +309,8 @@ fblank: ldy fk_o
 ; unchanged): A = 1 not a number, 2 too large, 3 not a date, 4 not Yes/No
 t2f:    jsr trimtmp
         lda fk_k
+        cmp #K_NO
+        jcs t2f_nest
         cmp #K_NUMBER
         jeq @num
         cmp #K_MONEY
@@ -791,6 +809,8 @@ fless:  lda rp
 @yes:   sec
         rts
 @cmp:   lda fk_k
+        cmp #K_NO
+        bcs @n16
         cmp #K_NUMBER
         beq @num
         cmp #K_MONEY
@@ -812,6 +832,17 @@ fless:  lda rp
         adc #0
         sta ptr2+1
         jmp strless
+@n16:   ldy fk_o                ; No., Part Of: unsigned 16 bits
+        iny
+        lda (rp2),y
+        cmp (rp),y
+        bne @nh
+        dey
+        lda (rp2),y
+        cmp (rp),y
+@nh:    bcs @no
+        sec
+        rts
 @yn:    ldy fk_o                ; Yes before No
         lda (rp2),y
         cmp (rp),y

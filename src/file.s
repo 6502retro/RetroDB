@@ -320,6 +320,11 @@ doload: lda #0
         jmp @fl
 @fd:    lda ld_nf
         sta nfields
+        LDAY fkind              ; one No., one Part Of
+        sta rq
+        sty rq+1
+        ldx ld_nf
+        jsr fixkinds
         jsr fdsetup
         jcs @notdb
         jsr initpool
@@ -393,6 +398,7 @@ doload: lda #0
         sta sortkey
         jsr clearcrit
         jsr formchanged
+        jsr numberfix
         jsr showall
         clc
         rts

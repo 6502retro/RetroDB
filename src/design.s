@@ -305,7 +305,7 @@ drawdrow:
         ldx dr_r
         lda dkind,x
         jsr kindname
-        ldx #6
+        ldx #7
         jsr prtw
         lda #0
         sta inv
@@ -869,7 +869,15 @@ dcheck: lda dn
         lda #<al_badlen
         ldy #>al_badlen
         jmp @bad
-@n4:    jsr dsize               ; size
+@n4:    jsr dnestchk            ; No. and Part Of
+        bcc @n4b
+        stx drow
+        pha
+        lda #1
+        sta dcol
+        pla
+        jmp @bad
+@n4b:   jsr dsize               ; size
         bcc @n5
         lda #<al_toolong
         ldy #>al_toolong
@@ -1057,6 +1065,7 @@ dapply: lda #<s_working
         sta selactive
         jsr clearcrit
         jsr formchanged
+        jsr numberfix
         jsr showall
         lda #0
         sta sel

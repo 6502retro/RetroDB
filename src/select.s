@@ -337,6 +337,10 @@ rm_back:
 fldmatch:
         ldx rm_f
         jsr getfk
+        lda fk_k
+        cmp #K_NO
+        jcs fm_nest
+fm_body:
         ; the criterion -> OPLO (zero-terminated), trimmed
         ldx rm_f
         jsr ctptr

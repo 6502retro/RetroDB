@@ -19,7 +19,7 @@ ethi:
         .byte >(EDITTXT + I * EDITW)
 .endrepeat
 s_fhint: .byte "TAB or ", G_UP, G_DOWN, " next field  ", G_LEFT, G_RIGHT
-         .byte " Yes/No  CTRL-X clear", 0
+         .byte " choose  CTRL-X clear", 0
 s_ok:    .byte "OK", 0
 s_recof: .byte "Record ", 0
 s_of:    .byte " of ", 0
@@ -35,6 +35,7 @@ s_bad2:  .byte "The number in ", 0
 s_bad2b: .byte "|is too large. The largest is|", 0
 s_max1:  .byte "999,999,999.", 0
 s_max2:  .byte "$9,999,999.99.", 0
+s_max3:  .byte "999.", 0
 s_bad3:  .byte "Please type a date in|", 0
 s_bad3b: .byte "|as YYYY-MM-DD or MM/DD/YYYY,|or leave it blank.", 0
 s_bad1b: .byte ", like 42.", 0
@@ -187,6 +188,8 @@ drawefld:
         lda fkind,x
         cmp #K_YESNO
         beq @yn
+        cmp #K_NO
+        jcs ef_drawnest
         cmp #K_MONEY
         bne @t
         lda #FL_VCOL
@@ -284,8 +287,15 @@ addnum8x1:
 editrec:
         sta ftitle
         sty ftitle+1
-        lda #0
+        lda #0                  ; the first field that can be typed in
         sta ffoc
+        lda fkind
+        cmp #K_NO
+        bne @full
+        lda nfields
+        cmp #2
+        bcc @full
+        inc ffoc
 @full:  jsr hidecursor
         jsr drawform
 @loop:  jsr getevent
@@ -310,7 +320,14 @@ editrec:
         lda fkind,x
         cmp #K_YESNO
         beq @selkey
-        jsr ffld
+        cmp #K_NO
+        jeq @loop               ; the No. can't be changed
+        cmp #K_PARTOF
+        bne @txt
+        lda keych
+        jsr ef_pokey
+        jmp @loop
+@txt:   jsr ffld
         lda keych
         jsr tfkey
         bcc @loop
@@ -358,16 +375,26 @@ editrec:
         jsr drawefld
         jmp @loop
 @next:  ldx ffoc
-        inx
+@nx:    inx
         cpx nfields
-        bcc @setf
+        bcc @nk
         ldx #0
+@nk:    lda fkind,x             ; (the No. can't be typed in: skip it)
+        cmp #K_NO
+        bne @setf
+        cpx ffoc
+        bne @nx
         beq @setf
 @prev:  ldx ffoc
-        dex
-        bpl @setf
+@pv:    dex
+        bpl @pk2
         ldx nfields
         dex
+@pk2:   lda fkind,x
+        cmp #K_NO
+        bne @setf
+        cpx ffoc
+        bne @pv
 @setf:  lda ffoc
         stx ffoc
         tax
@@ -405,6 +432,8 @@ editrec:
         jsr drawefld
         ldx ffoc                ; clicks on a Yes/No choice change it
         lda fkind,x
+        cmp #K_PARTOF
+        beq @pom
         cmp #K_YESNO
         bne @lp
         lda mcol
@@ -416,6 +445,18 @@ editrec:
 @mn:    cmp #FL_VCOL+7
         bcs @lp
         jmp @snext
+@pom:   lda mcol                ; and on a Part Of choice
+        cmp #FL_VCOL
+        bcc @lp
+        cmp #FL_VCOL+7
+        bcs @lp
+        ldx #$15
+        cmp #FL_VCOL+2
+        bcs @pk
+        ldx #$08
+@pk:    txa
+        jsr ef_pokey
+        jmp @loop
 @ok:    ; parse every field into EDITREC
         lda #<EDITREC
         sta rp
@@ -439,7 +480,11 @@ editrec:
 @pn:    ldx ok_f
         inx
         bne @pf
-@pd:    lda ok_any
+@pd:    jsr ef_check
+        bcc @pc
+        jsr alert
+        jmp @full
+@pc:    lda ok_any
         bne @good
         lda #<al_empty
         ldy #>al_empty
@@ -490,7 +535,12 @@ baderr: jsr mb_reset
         lda fkind,x
         cmp #K_MONEY
         beq @m2
-        lda #<s_max1
+        cmp #K_NO
+        bcc @m1
+        lda #<s_max3
+        ldy #>s_max3
+        jmp @fin
+@m1:    lda #<s_max1
         ldy #>s_max1
         jmp @fin
 @m2:    lda #<s_max2

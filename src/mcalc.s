@@ -537,8 +537,8 @@ mcwidths:
         rts
 
         .segment "LCODE"
-;                 -  Text Num Money Date Yes/No
-mcw_kind: .byte  11, 11,  11, 13,   11,  6
+;                 -  Text Num Money Date Yes/No No. PartOf
+mcw_kind: .byte  11, 11,  11, 13,   11,  6,     6,  8
         .segment "LCODE"
 
 ; wr_mchdr: unpack the PackBits header into the output, putting in the
@@ -650,6 +650,8 @@ wr_field:
         ldx ex_col
         jsr getfk
         lda fk_k
+        cmp #K_NO
+        jcs wr_nest
         jsr isnumk
         bcs @num
         jsr f2t                 ; Text, Date, Yes/No: text
@@ -1134,6 +1136,11 @@ cmd_import:
 @fin:   lda im_hw
         sta count
         jsr compact
+        jsr imp_nest
+        jsr treeon
+        bcc @ft
+        jsr dotree
+@ft:
         lda #0
         sta selactive
         jsr showall
@@ -1541,7 +1548,8 @@ newform:
         ldx im_x
         inx
         bne @f
-@size:  jsr dsize               ; too long?  shorten the longest Text
+@size:  jsr nestkinds           ; "No." and "Part Of" columns
+        jsr dsize               ; too long?  shorten the longest Text
         bcs @shrink
         cmp #MAXRECSZ
         bcc @ok

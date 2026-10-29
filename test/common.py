@@ -10,7 +10,7 @@ def start(vol='test/vol', **kw):
     a = boot('build/MOUSEDB.SYSTEM', vol, **kw); a.run(); a.key(' '); a.run(); return a
 def show(a):
     print(a.plain()); print('-' * 80)
-KINDS = {'Text': 1, 'Number': 2, 'Money': 3, 'Date': 4, 'Yes/No': 5}
+KINDS = {'Text': 1, 'Number': 2, 'Money': 3, 'Date': 4, 'Yes/No': 5, 'No.': 6, 'Part Of': 7}
 def design(a, fields, ok=True):
     """fields: (name, kind, length, inlist) typed into the Design Form window,
     starting on the new (blank) row"""

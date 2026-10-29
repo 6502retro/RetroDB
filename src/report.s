@@ -25,7 +25,14 @@ cmd_sort:
         lda #<s_sorting
         ldy #>s_sorting
         jsr statusmsg
-        jsr dosort
+        jsr treeon              ; By Part Of: tree order
+        bcc @so
+        lda #0
+        sta sortdesc
+        jsr dotree
+        jmp @sd
+@so:    jsr dosort
+@sd:    jsr notab_inval
         lda #1
         sta dirty
 @d:     jsr rebuildview
@@ -183,6 +190,9 @@ cmd_report:
 @ns:    sta rs_f
         lda #$FF
         sta rg_f
+        ldx nf_po               ; group by Part Of, if there is one
+        cpx #$FF
+        bne @gset
         ldx #1                  ; group by a short Text field after the
 @tl:    cpx nfields             ; first, or else the first Yes/No field
         bcs @yn0
@@ -800,8 +810,11 @@ rextreme:
         jsr recget
         lda #RG_NAME+10
         sta cx
+        ldx nf_nm               ; the record's name: its first Text field
+        cpx #$FF
+        bne @nm
         ldx #0
-        jsr getfk
+@nm:    jsr getfk
         lda #0
         sta f2t_mode
         jsr f2t
