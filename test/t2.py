@@ -1,0 +1,95 @@
+# MouseDB: sorting, selecting, finding, the report
+import sys; sys.path.insert(0, 'test')
+from common import *
+V = 'test/v2'; fresh(V)
+F = [('Title', 'Text', 24, 1), ('Maker', 'Text', 12, 1), ('Year', 'Number', 0, 1),
+     ('Price', 'Money', 0, 1), ('Bought', 'Date', 0, 1), ('Boxed', 'Yes/No', 0, 1)]
+R = [['Karateka', 'Broderbund', '1984', '25', '1990-05-01', 'Yes'],
+     ['Lode Runner', 'Broderbund', '1983', '30', '1989-12-24', 'No'],
+     ['Oregon Trail', 'MECC', '1985', '20', '1991', ''],
+     ['Zork I', 'Infocom', '1980', '45.5', '', 'Yes'],
+     ['apple panic', 'Broderbund', '1981', '', '1990-05', 'No'],
+     ['Choplifter', 'Broderbund', '', '12', '1988-01-10', 'Yes'],
+     ['Ultima IV', 'Origin', '1985', '-5', '1992-02-29', 'Yes']]
+open(V + '/GAMES', 'wb').write(dbfile('GAMES', F, R))
+open(V + '/MOUSEDB.LAST', 'wb').write(b'GAMES\r')
+a = start(V)
+check('loaded GAMES with 7 records', '7 of 250 records' in rows(a, 22, 23))
+def titles(): return [r[:24].strip() for r in listrows(a, 7)]
+def sort(f): menu(a, 3, f)
+sort(0); check('sort by Title (any case)', titles() == ['apple panic', 'Choplifter', 'Karateka', 'Lode Runner', 'Oregon Trail', 'Ultima IV', 'Zork I'])
+sort(0); check('again: Z to A', titles() == ['Zork I', 'Ultima IV', 'Oregon Trail', 'Lode Runner', 'Karateka', 'Choplifter', 'apple panic'])
+sort(2); check('by Year, blank first: %s' % titles(), titles()[0] == 'Choplifter' and titles()[1] == 'Zork I' and titles()[-1] in ('Oregon Trail', 'Ultima IV'))
+sort(3); t = titles(); check('by Price: blank, negative, then up: %s' % t, t[:3] == ['apple panic', 'Ultima IV', 'Choplifter'] and t[-1] == 'Zork I')
+sort(4); t = titles(); check('by Bought (dates): %s' % t, t == ['Zork I', 'Choplifter', 'Lode Runner', 'apple panic', 'Karateka', 'Oregon Trail', 'Ultima IV'])
+sort(5); t = titles(); check('by Boxed: blank, Yes, No: %s' % t, t[0] == 'Oregon Trail' and set(t[1:5]) == {'Karateka', 'Zork I', 'Choplifter', 'Ultima IV'} and set(t[5:]) == {'Lode Runner', 'apple panic'})
+a.key(0x1B); a.key(0x15); a.key(0x15); a.run()
+check('Sort menu marks the field', '✓By Boxed' in a.plain() or '✓By Boxed' in a.plain() or a.plain().count('By Boxed') == 1)
+a.key(0x1B); a.run()
+sort(0)
+check('sorting marks the database changed', 'Modified' in rows(a, 22, 23))
+def select(crit):
+    a.key('L', oa=True); a.run()
+    for i in range(6):
+        a.key(0x18)
+        if crit[i]: a.key(crit[i])
+        a.key('\t')
+    a.key('\r'); a.run()
+    return titles()[:rows(a, 22, 23).count('x') + 7]
+def shown(): return [t for t in titles() if t]
+select(['', 'brod', '', '', '', '']); check('contains (any case): %s' % shown(), shown() == ['apple panic', 'Choplifter', 'Karateka', 'Lode Runner'])
+check('status: 4 selected of 7 records', '4 selected of 7 records' in rows(a, 22, 23))
+select(['', '=MECC', '', '', '', '']); check('=exact', shown() == ['Oregon Trail'])
+select(['', '/brod', '', '', '', '']); check('/not: %s' % shown(), shown() == ['Oregon Trail', 'Ultima IV', 'Zork I'])
+select(['', '', '>=1984', '', '', '']); check('number >=1984: %s' % shown(), shown() == ['Karateka', 'Oregon Trail', 'Ultima IV'])
+select(['', '', '1981..1984', '', '', '']); check('number range: %s' % shown(), shown() == ['apple panic', 'Karateka', 'Lode Runner'])
+select(['', '', '=', '', '', '']); check('= alone: blank: %s' % shown(), shown() == ['Choplifter'])
+select(['', '', '/', '', '', '']); check('/ alone: not blank', len(shown()) == 6 and 'Choplifter' not in shown())
+select(['', '', '1985', '', '', '']); check('number default: equals: %s' % shown(), shown() == ['Oregon Trail', 'Ultima IV'])
+select(['', '', '', '<$20', '', '']); check('money <$20: %s' % shown(), shown() == ['Choplifter', 'Ultima IV'])
+select(['', '', '', '<>25', '', '']); check('money <>25: %s' % shown(), 'Karateka' not in shown() and 'apple panic' not in shown() and len(shown()) == 5)
+select(['', '', '', '', '1990', '']); check('date default: starts with: %s' % shown(), shown() == ['apple panic', 'Karateka'])
+select(['', '', '', '', '<1/1/1990', '']); check('date < in US form: %s' % shown(), shown() == ['Choplifter', 'Lode Runner'])
+select(['', '', '', '', '1990-01..1991-12', '']); check('date range: %s' % shown(), shown() == ['apple panic', 'Karateka', 'Oregon Trail'])
+select(['', '', '', '', '', 'y']); check('yes/no: %s' % shown(), shown() == ['Choplifter', 'Karateka', 'Ultima IV', 'Zork I'])
+select(['', 'brod', '<1984', '', '', 'n']); check('several fields: all must match: %s' % shown(), shown() == ['apple panic', 'Lode Runner'])
+select(['k', '', '', '', '', '']); check('text contains k: %s' % shown(), shown() == ['Karateka', 'Zork I'])
+select(['<L', '', '', '', '', '']); check('text <L (alphabetical): %s' % shown(), shown() == ['apple panic', 'Choplifter', 'Karateka'])
+select(['zzz', '', '', '', '', ''])
+check('no match: message', 'No records match' in a.plain())
+a.key('\r'); a.run()
+check('no match: empty list, 0 selected', '0 selected of 7' in rows(a, 22, 23))
+a.key('A', oa=True); a.run()
+check('Show All: 7 records', '7 of 250 records' in rows(a, 22, 23) and len(shown()) == 7)
+select(['', 'brod', '', '', '', ''])
+a.key('L', oa=True); a.run()
+check('Select remembers the criteria', 'brod' in a.plain())
+a.key(0x1B); a.run()
+# report on the selection
+a.key('R', oa=True); a.run(); p = a.plain()
+check('report title for a selection', 'Report on the Selected Records' in p)
+check('report groups by Maker (first short text after the first)', 'Group by: ← Maker' in p)
+check('report totals Price', 'Total of: ← Price' in p)
+check('report total row: 4 records, $67.00: ' + [l for l in p.split('\n') if 'Total' in l and '$' in l][0], any('Total' in l and ' 4 ' in l and '$67.00' in l for l in p.split('\n')))
+check('average $22.33 (blank not counted)', 'Average:  $22.33' in p)
+check('highest Lode Runner $30.00', 'Highest:  Lode Runner' in p and '$30.00' in p)
+check('lowest Choplifter $12.00', 'Lowest:   Choplifter' in p and '$12.00' in p)
+a.key(0x15); a.run(); p = a.plain()
+check('group by the next field: Year', 'Group by: ← Year' in p)
+a.key(0x1B); a.run(); a.key('A', oa=True); a.run()
+a.key('R', oa=True); a.run(); a.key(0x15); a.key(0x15); a.key(0x15); a.run(); p = a.plain()
+check('group by Bought (dates) with all 7', 'Group by: ← Bought' in p and '(blank)' in p)
+a.key(0x09); a.key(0x15); a.run(); p = a.plain()
+check('TAB then → : total of none', 'Total of: ← (none)' in p and 'Average' not in p)
+a.key('\r'); a.run()
+# find
+a.key('F', oa=True); a.run(); a.key('INFO\r'); a.run()
+check('Find in any field selects Zork I', listrows(a, 7)[6].startswith('Zork') and '#' in a.inverse_spans(10))
+a.key('F', oa=True); a.run(); a.key(0x18); a.key('brod\r'); a.run()
+check('Find wraps to the top', '#' in a.inverse_spans(4))
+a.key('G', oa=True); a.run(); check('Find Next', '#' in a.inverse_spans(5))
+a.key('F', oa=True); a.run(); a.key(0x18); a.key('1992-02\r'); a.run()
+check('Find looks in dates', '#' in a.inverse_spans(9))
+a.key('F', oa=True); a.run(); a.key(0x18); a.key('nothing\r'); a.run()
+check('Find: no match message', 'No record matches that text.' in a.plain())
+done()
