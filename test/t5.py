@@ -44,7 +44,7 @@ check('MOUSEDB.LAST naming another kind of file: start empty', 'Untitled' in row
 fresh(V); open(V + '/DB', 'wb').write(dbfile('DB', [('Name', 'Text', 56, 1), ('X', 'Text', 56, 1)], [['a', 'b']]))
 a = go(mem128=False)
 cap = a.main[L['maxrec']]
-check('64K Apple: fewer records fit (%d)' % cap, a.main[L['auxok']] == 0 and cap == ((0x4000 - L['__XBSS_RUN__'] - L['__XBSS_SIZE__']) // 114) + ((0xBB00 - L['__LCODE_LOAD__']) // 114))
+check('64K Apple: fewer records fit (%d)' % cap, a.main[L['auxok']] == 0 and cap == ((0x4000 - L['__XBSS_RUN__'] - L['__XBSS_SIZE__']) // 114) + ((0xBB00 - L['__SPLZ_RUN__'] - (3 * 250 + 128 + 64)) // 114))
 # /RAM holding files
 a = go(ram=3)
 check('/RAM with files: message, main memory only', '/RAM has files on it' in a.plain() and a.main[L['auxok']] == 0)

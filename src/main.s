@@ -185,7 +185,7 @@ unsplash:
         inc ptr2+1
 @i:     rts
 
-        .segment "RODATA"
+        .segment "SPLZ"         ; (memory for records once it is shown)
 splashlz: .incbin "../build/splash.lz"
         .segment "CODE"
 
@@ -300,9 +300,9 @@ calccols:
         sta cc_x
         ldx #0
 @f:     cpx nfields
-        bcs @d
+        jcs @d
         lda flist,x
-        beq @n
+        jeq @n
         stx cc_f
         lda fkind,x
         pha
@@ -311,9 +311,19 @@ calccols:
         pla
         jsr kindwidth
         ldx cc_f
-        cmp #24
+        ldy #24                 ; widest column: 24, or 30 for the names
+        cpx nf_nm               ; of a form with Part Of (room to indent)
+        bne @cap
+        ldy nf_po
+        iny
+        beq @cap0
+        ldy #30
+        bne @cap
+@cap0:  ldy #24
+@cap:   sty cc_cap
+        cmp cc_cap
         bcc @w
-        lda #24
+        lda cc_cap
 @w:     sta cc_w
         jsr fnameptr            ; at least as wide as a short name
         ldy #0
@@ -351,7 +361,7 @@ calccols:
         sta cc_x
         ldx cc_f
 @n:     inx
-        bne @f
+        jne @f
 @d:     rts
 
 ; isnumk: A = kind -> carry set if Number or Money (shown on the right)
@@ -1536,6 +1546,7 @@ lc_f:     .res MAXFIELDS
 lc_x:     .res MAXFIELDS
 lc_w:     .res MAXFIELDS
 cc_x:     .res 1
+cc_cap:   .res 1
 cc_w:     .res 1
 cc_f:     .res 1
 pf_w:     .res 1

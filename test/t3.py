@@ -40,13 +40,14 @@ check('sorted by Code (as text)', [g[1] for g in got] == [r[1] for r in R2])
 check('values survive a save', got == R2)
 R2 = got
 # 1. grow: insert a field at the top, make Code longer -> bigger records
+#    (198 bytes: 237 fit in aux, the other 5 in main memory)
 menu(a, 1, 5)            # Design Form
-a.key('I', oa=True); a.key('Serial\t\t'); a.key(0x18); a.key('12\t\t')   # new first field
-a.key(0x0A); a.key('\t\t'); a.key(0x18); a.key('20'); a.run()            # Code: 8 -> 20
+a.key('I', oa=True); a.key('Serial\t\t'); a.key(0x18); a.key('2\t\t')    # new first field
+a.key(0x0A); a.key('\t\t'); a.key(0x18); a.key('9'); a.run()             # Code: 8 -> 9
 a.key('\r'); a.run()
 check('growing asks nothing when nothing is lost', 'This changes all' not in a.plain())
 hdr, got = saved()
-check('new header', hdr[0] == '"Serial",1,12,1' and hdr[2] == '"Code",1,20,1' and len(hdr) == 9)
+check('new header', hdr[0] == '"Serial",1,2,1' and hdr[2] == '"Code",1,9,1' and len(hdr) == 9)
 check('values kept after growing', [g[1:] for g in got] == R2 and all(g[0] == '' for g in got))
 bk = list(a.main[0x0A00:0x0A00 + 242])
 check('records still use aux and main memory', 1 in bk and 0 in bk)
@@ -64,7 +65,7 @@ a.key('\r'); a.run()
 check('shrinking asks first', 'This changes all 242 records' in a.plain())
 a.key('\r'); a.run()
 hdr, got = saved()
-check('header after shrinking: %s' % hdr, hdr == ['"Serial",1,12,1', '"Name",1,10,1', '"Code",2,10,1', '"Qty",1,20,1', '"Cost",3,12,1', '"Day",4,10,1', '"Ok",5,3,1'])
+check('header after shrinking: %s' % hdr, hdr == ['"Serial",1,2,1', '"Name",1,10,1', '"Code",2,10,1', '"Qty",1,20,1', '"Cost",3,12,1', '"Day",4,10,1', '"Ok",5,3,1'])
 exp = [['', r[0][:10].rstrip(), str(int(r[1])), r[2], r[3], r[6], r[7]] for r in R2]
 bad = [(g, e) for g, e in zip(got, exp) if g != e]
 check('values converted (cut, number <-> text): %d differ %s' % (len(bad), bad[:2]), not bad)
@@ -99,7 +100,7 @@ check('duplicate name refused (any case)', 'Two fields have the same name' in a.
 a.key('\r'); a.run(); a.key(0x1B); a.run()
 # editing the record in main memory, then drawing records in aux memory
 # (a smaller form, so that pool A holds the first record)
-F2 = F[:5] + [('More', 'Text', 20, 0)] + F[6:]
+F2 = F[:5] + [('More', 'Text', 12, 0)] + F[6:]
 fresh(V); open(V + '/BIG', 'wb').write(dbfile('BIG', F2, R[:20])); open(V + '/MOUSEDB.LAST', 'wb').write(b'BIG\r')
 a = start(V)
 check('record 0 is in main memory, record 1 in aux', a.main[0x0A00] == 0 and a.main[0x0A01] == 1)

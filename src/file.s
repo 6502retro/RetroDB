@@ -399,7 +399,13 @@ doload: lda #0
         jsr clearcrit
         jsr formchanged
         jsr numberfix
-        jsr showall
+        ldx nf_po               ; with a Part Of field: open in tree order
+        cpx #$FF
+        beq @nt
+        stx sortkey
+        jsr dotree
+        jsr buildsortmenu
+@nt:    jsr showall
         clc
         rts
 @notdb: lda #$80

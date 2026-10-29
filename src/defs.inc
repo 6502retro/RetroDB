@@ -104,10 +104,11 @@ mc_path   = $0342       ; 66 bytes each
 colmap    = $0384       ; 64 bytes
         .import __LCODE_RUN__, __LCODE_SIZE__
         .import __XBSS_RUN__, __XBSS_SIZE__
-        .import __DATA_RUN__, __DATA_SIZE__
+        .import __SPLZ_RUN__, __SPLZ_SIZE__
 POOLA     = __XBSS_RUN__ + __XBSS_SIZE__  ; main memory left after LCODE
 POOLA_END = $4000
-TBASE     = __DATA_RUN__ + __DATA_SIZE__  ; nesting tables (nest.s)
+TBASE     = __SPLZ_RUN__                  ; nesting tables (nest.s), over
+                                          ; the title picture once shown
 TBSIZE    = 3 * 250 + 128 + 64            ; NOLO NOHI DEPTH NOMAP FAKEREC
 POOLB     = TBASE + TBSIZE                ; main memory after the program
 AUXPOOL   = $0800       ; record pool in auxiliary memory

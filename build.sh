@@ -18,10 +18,11 @@ for line in open("build/mousedb.lbl"):
 sz = L['__LCODE_SIZE__']
 xe = L['__XBSS_RUN__'] + L['__XBSS_SIZE__']
 be = L['__BSS_RUN__'] + L['__BSS_SIZE__']
-pe = L['__DATA_RUN__'] + L['__DATA_SIZE__']
+pe = L['__SPLZ_RUN__']
+se = pe + L['__SPLZ_SIZE__']
 tb = 3 * 250 + 128 + 64
 print('LCODE %d bytes at $2000; XBSS to $%04X; program $4000-$%04X; BSS $1000-$%04X'
       % (sz, xe - 1, pe - 1, be - 1))
 print('main-memory record pools: %d + %d bytes' % (0x4000 - xe, 0xBB00 - pe - tb))
-assert xe <= 0x4000 and be <= 0x2000 and pe + tb <= 0xBB00
+assert xe <= 0x4000 and be <= 0x2000 and pe + tb <= 0xBB00 and se <= 0xBB00
 PY

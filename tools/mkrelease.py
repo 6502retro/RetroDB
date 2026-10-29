@@ -12,7 +12,7 @@ shutil.copy('build/samples/COLLECTION', V + '/COLLECTION')
 open(V + '/MOUSEDB.LAST', 'wb').write(b'COLLECTION\r')
 a = boot('build/MOUSEDB.SYSTEM', V); a.run(); a.key(' '); a.run()
 a.key('X', oa=True); a.run(); a.key(0x18); a.key('COLLECT.MC\r'); a.run()
-assert 'Exported 14 records' in a.plain(), a.plain()
+assert 'Exported 16 records' in a.plain(), a.plain()
 shutil.copy(V + '/COLLECT.MC', 'build/COLLECT.MC')
 os.makedirs(OUT, exist_ok=True)
 files = ['prodos/PRODOS:PRODOS:0xFF:0x0000',
@@ -26,5 +26,5 @@ files += ['build/samples/ADDRESSES:ADDRESSES:0x04:0x0000',
           'build/COLLECT.MC:COLLECT.MC:0xF8:0x0000']
 open('build/MOUSEDB.LAST', 'wb').write(b'ADDRESSES\r')
 files.append('build/MOUSEDB.LAST:MOUSEDB.LAST:0x04:0x0000')
-subprocess.run([sys.executable, 'tools/mkprodos.py', '--boot=prodos/BOOTBLOCKS', OUT + '/MOUSEDB-1.0.po', 'MOUSEDB'] + files, check=True)
-print('wrote', OUT + '/MOUSEDB-1.0.po')
+subprocess.run([sys.executable, 'tools/mkprodos.py', '--boot=prodos/BOOTBLOCKS', OUT + '/MOUSEDB-1.1.po', 'MOUSEDB'] + files, check=True)
+print('wrote', OUT + '/MOUSEDB-1.1.po')

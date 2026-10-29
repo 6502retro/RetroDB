@@ -1,10 +1,10 @@
 """Write the sample databases shipped on the MouseDB disk (MOUSEDB1 text files)."""
 import sys, os
-KIND = {'Text': 1, 'Number': 2, 'Money': 3, 'Date': 4, 'Yes/No': 5}
+KIND = {'Text': 1, 'Number': 2, 'Money': 3, 'Date': 4, 'Yes/No': 5, 'No.': 6, 'Part Of': 7}
 def db(path, fields, records):
     out = ['MOUSEDB1', str(len(fields))]
     for (n, k, l, s) in fields:
-        out.append('"%s",%d,%d,%d' % (n, KIND[k], l if k == 'Text' else {'Number': 10, 'Money': 12, 'Date': 10, 'Yes/No': 3}[k], s))
+        out.append('"%s",%d,%d,%d' % (n, KIND[k], l if k == 'Text' else {'Number': 10, 'Money': 12, 'Date': 10, 'Yes/No': 3, 'No.': 4, 'Part Of': 20}[k], s))
     out.append(str(len(records)))
     for r in records:
         assert len(r) == len(fields), r
@@ -34,26 +34,30 @@ db(out + '/ADDRESSES',
     ['Kim Palmer', '', '555-0190', 'Richmond', 'VA', '1970-02-28', '', 'No', ''],
     ['Leo Santos', '', '555-0158', 'Tampa', 'FL', '1986-09-21', 'leo@example.com', 'Yes', 'Mouse Calc fan']])
 
-# a retro computer collection, like RetroInv's
-db(out + '/COLLECTION',
-   [('Item', 'Text', 28, 1), ('Maker', 'Text', 12, 1), ('Year', 'Number', 0, 1),
-    ('Type', 'Text', 10, 1), ('Condition', 'Text', 9, 1), ('Location', 'Text', 12, 0),
-    ('Value', 'Money', 0, 1), ('Bought', 'Date', 0, 0), ('Works', 'Yes/No', 0, 0),
-    ('Notes', 'Text', 40, 0)],
-   [['Apple IIe Enhanced', 'Apple', '1985', 'Computer', 'Excellent', 'Desk', '450.00', '2019-05-11', 'Yes', 'Platinum keyboard, 128K'],
-    ['Extended 80-Column Card', 'Apple', '1983', 'Card', 'Excellent', 'In the IIe', '35.00', '2019-05-11', 'Yes', '64K'],
-    ['Super Serial Card', 'Apple', '1981', 'Card', 'Good', 'In the IIe', '40.00', '', 'Yes', 'Slot 2'],
-    ['AppleMouse II Card', 'Apple', '1984', 'Card', 'Good', 'In the IIe', '45.00', '2020-02-01', 'Yes', 'Slot 4, mouse in drawer'],
-    ['Disk II Controller', 'Apple', '1978', 'Card', 'Good', 'In the IIe', '60.00', '', 'Yes', 'Slot 6'],
-    ['Disk II Drive', 'Apple', '1978', 'Peripheral', 'Good', 'Desk', '125.50', '2018-10-20', 'Yes', 'Cleaned heads'],
-    ['Apple IIGS ROM 3', 'Apple', '1989', 'Computer', 'Excellent', 'Den', '600.00', '2021-07-04', 'Yes', '4 MB'],
-    ['AppleColor RGB Monitor', 'Apple', '1986', 'Peripheral', 'Good', 'Den', '150.00', '2021-07-04', 'Yes', ''],
-    ['Apple 3.5 Drive', 'Apple', '1986', 'Peripheral', 'Fair', 'Den', '80.00', '', 'No', 'Slow eject'],
-    ['Apple IIc', 'Apple', '1984', 'Computer', 'Good', 'Shelf 1', '275.00', '2017-03-18', 'Yes', 'With carrying case'],
-    ['Oregon Trail', 'MECC', '1985', 'Software', 'For Parts', 'Box A', '20.00', '', 'No', 'Disk will not boot'],
-    ['Kraft Joystick', 'Kraft', '1982', 'Accessory', 'Poor', 'Drawer', '5.00', '', 'Yes', 'Sticky button'],
-    ['AppleWorks 3.0 Manual', 'Claris', '1989', 'Documents', 'Excellent', 'Shelf 2', '15.00', '2022-01-15', '', ''],
-    ['ImageWriter II', 'Apple', '1985', 'Peripheral', 'Good', 'Closet', '90.00', '2016-09-09', 'Yes', 'New ribbon']])
+# a retro computer collection, like RetroInv's: No. and Part Of show
+# what is inside what (cards in a computer, a drive on its card, things in
+# a box in the closet)
+C = [('No.', 'No.', 0, 1), ('Item', 'Text', 28, 1), ('Part Of', 'Part Of', 0, 1),
+     ('Maker', 'Text', 12, 0), ('Year', 'Number', 0, 0), ('Type', 'Text', 10, 1),
+     ('Condition', 'Text', 9, 0), ('Value', 'Money', 0, 1), ('Bought', 'Date', 0, 0),
+     ('Works', 'Yes/No', 0, 0), ('Notes', 'Text', 40, 0)]
+db(out + '/COLLECTION', C,
+   [['1', 'Apple IIe Enhanced', '', 'Apple', '1985', 'Computer', 'Excellent', '450.00', '2019-05-11', 'Yes', 'Platinum keyboard, 128K'],
+    ['2', 'Extended 80-Column Card', '1', 'Apple', '1983', 'Card', 'Excellent', '35.00', '2019-05-11', 'Yes', 'Aux slot, 64K'],
+    ['3', 'Super Serial Card', '1', 'Apple', '1981', 'Card', 'Good', '40.00', '', 'Yes', 'Slot 2'],
+    ['4', 'AppleMouse II Card', '1', 'Apple', '1984', 'Card', 'Good', '45.00', '2020-02-01', 'Yes', 'Slot 4, mouse in drawer'],
+    ['5', 'Disk II Controller', '1', 'Apple', '1978', 'Card', 'Good', '60.00', '', 'Yes', 'Slot 6'],
+    ['6', 'Disk II Drive', '5', 'Apple', '1978', 'Peripheral', 'Good', '125.50', '2018-10-20', 'Yes', 'Drive 1, cleaned heads'],
+    ['7', 'Apple IIGS ROM 3', '', 'Apple', '1989', 'Computer', 'Excellent', '600.00', '2021-07-04', 'Yes', '4 MB'],
+    ['8', 'AppleColor RGB Monitor', '7', 'Apple', '1986', 'Peripheral', 'Good', '150.00', '2021-07-04', 'Yes', ''],
+    ['9', 'Apple 3.5 Drive', '7', 'Apple', '1986', 'Peripheral', 'Fair', '80.00', '', 'No', 'Slow eject'],
+    ['10', 'Apple IIc', '', 'Apple', '1984', 'Computer', 'Good', '275.00', '2017-03-18', 'Yes', 'With carrying case'],
+    ['11', 'Hall Closet', '', '', '', 'Place', '', '', '', '', 'Top shelf'],
+    ['12', 'Storage Box A', '11', '', '', 'Box', '', '', '', '', 'Plastic tub'],
+    ['13', 'Oregon Trail', '12', 'MECC', '1985', 'Software', 'For Parts', '20.00', '', 'No', 'Disk will not boot'],
+    ['14', 'Kraft Joystick', '12', 'Kraft', '1982', 'Accessory', 'Poor', '5.00', '', 'Yes', 'Sticky button'],
+    ['15', 'AppleWorks 3.0 Manual', '12', 'Claris', '1989', 'Documents', 'Excellent', '15.00', '2022-01-15', '', ''],
+    ['16', 'ImageWriter II', '11', 'Apple', '1985', 'Peripheral', 'Good', '90.00', '2016-09-09', 'Yes', 'New ribbon']])
 
 # a software library
 db(out + '/SOFTWARE',
