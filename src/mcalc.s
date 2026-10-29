@@ -10,8 +10,8 @@
 ;   formula = type $C0+fmt, cached value, $FE, tokens
 ;
 ; Export writes the records shown in the list: row 1 holds the field
-; names, each record is a row, and a Total row adds up every Number and
-; Money column with a live SUM.  Import matches the row-1 headings with
+; names, each record is a row, and a Total row adds up the Money columns
+; (or, with none, the Number columns) with a live SUM.  Import matches the row-1 headings with
 ; the field names; into a database with no form yet, it makes a field
 ; from each heading.
 ; ---------------------------------------------------------------
