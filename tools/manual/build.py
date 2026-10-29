@@ -34,8 +34,8 @@ lg = Image.open(LOGO); lg.thumbnail((900, 900)); lg.save(f'{IMG}/logo.png')
 
 IMAGES = [
     ('title screen', 'splash'), ('main screen', 'main'), ('Record menu', 'menu'),
-    ('Design Form', 'design'), ('record window', 'edit'), ('Selecting the cards', 'select'),
-    ('four records', 'selected'), ('grouped by Maker', 'report'), ('Exporting', 'export'),
+    ('Design Form', 'design'), ('record window', 'edit'), ('Selecting the items', 'select'),
+    ('four records', 'selected'), ('grouped by Part Of', 'report'), ('Exporting', 'export'),
     ('sheet to import', 'import'), ('Open Database', 'open'), ('asks before closing', 'savech'),
 ]
 
@@ -58,7 +58,7 @@ for p in parts:
     if p.startswith('## '):
         title, _, rest = p.partition('\n')
         sections.append((title[3:].strip(), rest))
-assert sections[0][0] == 'MouseDB 1.0'
+assert sections[0][0] == 'MouseDB 1.1'
 front, chapters = sections[0], sections[1:]
 # the glossary goes with Appendix D
 if chapters[-1][0] == 'Glossary':
@@ -157,7 +157,7 @@ def body_html(pages):
     fr = front[1]
     notice = fr.split('### Notice', 1)[1]
     copy = f'''<section class="copy"><div class="copyin">{stripes('stripes thin')}
-<p class="cprod">MouseDB 1.0 Owner&rsquo;s Manual</p>
+<p class="cprod">MouseDB 1.1 Owner&rsquo;s Manual</p>
 {md2html(notice, False)}
 <p class="cfoot">&copy; 2026 Jonathan Adar (6502Retro). MouseDB is released under the MIT License.</p>
 </div><span class="mk">@@copy@@</span></section>'''
@@ -171,7 +171,7 @@ def cover_html():
   <div class="cband"><p class="capple">For the Apple IIe, Apple IIc and Apple IIGS</p></div>
   <div class="cmid">
     <p class="ctitle">MouseDB</p>
-    <p class="csub">Forms Database &middot; Version 1.0</p>
+    <p class="csub">Forms Database &middot; Version 1.1</p>
     <div class="monitor"><img src="file://{IMG}/splash.png"></div>
     <p class="cown">Owner&rsquo;s Manual</p>
   </div>
@@ -184,7 +184,7 @@ def back_html():
 <div class="back">
   {stripes('cstripes top')}
   <div class="bmid"><img class="logo" src="file://{IMG}/logo.png">
-  <p>MouseDB 1.0 &middot; a forms database for the Apple II</p>
+  <p>MouseDB 1.1 &middot; a forms database for the Apple II</p>
   <p class="small">6502Retro &middot; Retro Computing</p></div>
 </div></body></html>'''
 

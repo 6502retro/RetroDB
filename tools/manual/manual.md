@@ -2,7 +2,7 @@
 
 Oct 28, 2026 · @Jonathan Adar
 
-## MouseDB 1.0
+## MouseDB 1.1
 
 **A forms database for the Apple IIe, IIc and IIgs**
 
@@ -32,6 +32,7 @@ If you have used RetroInv or Mouse Calc, MouseDB will feel familiar at once. It 
 - **Chapter 6, Reports**, explains the group-and-total report.
 - **Chapter 7, Saving and Keeping More Than One Database**, covers Save, Save As, Open and Revert to Saved.
 - **Chapter 8, MouseDB and Mouse Calc**, explains exporting and importing sheets.
+- **Chapter 9, Records Inside Records**, shows how to keep track of what is inside what: cards in a computer, a drive on its card, things in a box on a shelf.
 - **The appendixes** summarize every command and message, give technical details, and help when something goes wrong.
 
 ### Conventions
@@ -56,7 +57,7 @@ MouseDB runs on an enhanced Apple IIe with an 80-column card, an Apple IIc or II
 | Enhanced Apple IIe, IIc or IIGS | Yes | MouseDB uses MouseText and the 80-column screen. An unenhanced IIe shows NEEDS ENHANCED IIE/IIC/IIGS and stops. |
 | 128K of memory | Recommended | With 128K, records are kept in the auxiliary 64K and up to 250 fit. With 64K, records share main memory and far fewer fit. |
 | A mouse | No | AppleMouse II card on the IIe, the built-in port on the IIc and IIGS. Every command also works from the keyboard. |
-| The MouseDB disk | Yes | A 140K ProDOS disk (MOUSEDB-1.0.po). It can also be copied to a hard disk or a 3.5-inch disk. |
+| The MouseDB disk | Yes | A 140K ProDOS disk (MOUSEDB-1.1.po). It can also be copied to a hard disk or a 3.5-inch disk. |
 | Mouse Calc | No | Only needed to work with exported sheets. |
 
 ### What's on the disk
@@ -66,7 +67,7 @@ MouseDB runs on an enhanced Apple IIe with an 80-column card, an Apple IIc or II
 | PRODOS | ProDOS 8, version 2.4.3 |
 | MOUSEDB.SYSTEM | The MouseDB program |
 | BASIC.SYSTEM | Applesoft BASIC, for your own programs |
-| ADDRESSES, COLLECTION, SOFTWARE | Three sample databases to explore |
+| ADDRESSES, COLLECTION, SOFTWARE | Three sample databases to explore. COLLECTION shows records inside other records (Chapter 9). |
 | COLLECT.MC | A Mouse Calc sheet exported from COLLECTION, for trying Import |
 | MOUSEDB.LAST | Remembers which database to open when MouseDB starts |
 
@@ -101,7 +102,7 @@ On a 128K Apple, ProDOS sets up the auxiliary 64K as a small disk called /RAM. M
 
 Everything in MouseDB starts from one screen: a list of your records, with the menu bar above it and the status line below.
 
-&#91;image: Figure 2-1: The main screen, showing the COLLECTION sample\]
+&#91;image: Figure 2-1: The main screen, showing the COLLECTION sample with what is inside what\]
 
 ### The parts of the main screen
 
@@ -177,7 +178,7 @@ Each row of the Design Form window is one field. Type the field's name in the fi
 
 After the last column, TAB takes you to the next row. A blank row is always waiting at the bottom for a new field.
 
-### The five types of field
+### The seven types of field
 
 | Type | Holds | You can type | Bytes |
 | --- | --- | --- | --- |
@@ -186,6 +187,8 @@ After the last column, TAB takes you to the next row. A blank row is always wait
 | Money | Amounts from -$9,999,999.99 to $9,999,999.99 | `12.5`, `$1,250.00` | 4 |
 | Date | A date from the year 1000 to 2999, or part of one | `1985-03-21`, `3/21/1985`, `03/1985`, `1985` | 11 |
 | Yes/No | Yes, No, or blank | Choose with LEFT ARROW and RIGHT ARROW | 1 |
+| No. | A record number from 1 to 999, given by MouseDB | Nothing: MouseDB fills it in | 2 |
+| Part Of | The No. of the record this one is inside | A No., or choose with LEFT ARROW and RIGHT ARROW | 2 |
 
 Dates are always shown as YYYY-MM-DD, so they sort correctly. A date can be just a year (`1985`) or a year and month (`1985-03`) when that's all you know.
 
@@ -220,9 +223,9 @@ A record is one filled-in form. A database holds up to 250 records on a 128K App
 
 ### Adding a record
 
-Choose New Record from the Record menu, or press Open-Apple-N. The record window opens with every field blank.
+Choose New Record from the Record menu, or press Open-Apple-N. The record window opens with every field blank. A No. field shows (new) until you click OK; then MouseDB gives the record its number.
 
-&#91;image: Figure 4-1: The record window\]
+&#91;image: Figure 4-1: The record window, showing that the Disk II Drive is part of the Disk II Controller\]
 
 1. Type the first field. The highlighted name on the left shows which field you are in.
 2. Press TAB or DOWN ARROW to go to the next field, UP ARROW to go back.
@@ -241,11 +244,11 @@ Select the record and press RETURN, choose Edit Record (Open-Apple-E), or click 
 
 ### Duplicating a record
 
-When a new record is much like one you already have, select that one and choose Duplicate Record (Open-Apple-C). The record window opens with a copy of every field. Change what's different and click OK; the copy is added at the end of the list.
+When a new record is much like one you already have, select that one and choose Duplicate Record (Open-Apple-C). The record window opens with a copy of every field except the No.; the copy gets a number of its own. Change what's different and click OK; the copy is added at the end of the list.
 
 ### Deleting records
 
-- **Delete Record** (Open-Apple-D) removes the selected record. MouseDB shows the record's first field and asks you to confirm.
+- **Delete Record** (Open-Apple-D) removes the selected record. MouseDB shows the record's name and asks you to confirm. If other records are inside it, MouseDB says how many (Chapter 9).
 - **Delete Selected** removes every record in the list. When you've selected records (Chapter 5) it deletes just those, after asking `Delete the 4 selected records?`; otherwise it asks whether to delete all of them.
 
 > **Important!** Deleted records are gone from memory at once. If you delete something by mistake, choose Revert to Saved before you save, to go back to the copy on disk.
@@ -268,7 +271,7 @@ Select Records shows only the records you ask for; the Sort menu puts the list i
 
 Choose Select Records from the View menu, or press Open-Apple-L. The dialog lists every field of the form with a blank beside it. Type what you're looking for beside one or more fields, then click Select or press RETURN.
 
-&#91;image: Figure 5-1: Selecting the cards made in 1984 or later that are worth more than $100\]
+&#91;image: Figure 5-1: Selecting the items made in 1984 or later that are worth more than $100\]
 
 The list then shows only the records that match **every** field you filled in. Fields you leave blank don't matter. The status line counts the selected records, and its total is just for them.
 
@@ -303,7 +306,7 @@ The Sort menu has a command for each field of the form, such as By Year. Choose 
 
 Choose the same field again to reverse the order, largest or latest first; a down arrow beside the check mark shows that it's reversed.
 
-Sorting puts the records themselves in order, so they stay that way when you save the database and the next time you open it. Records with a blank field sort together, before the rest.
+Sorting puts the records themselves in order, so they stay that way when you save the database and the next time you open it. Records with a blank field sort together, before the rest. By Part Of is different: it shows the records as a tree (Chapter 9).
 
 ## Chapter 6: Reports
 
@@ -311,7 +314,7 @@ The report sorts the records in the list into groups by one field and counts and
 
 Choose Report from the View menu, or press Open-Apple-R.
 
-&#91;image: Figure 6-1: The COLLECTION records grouped by Maker, with the total of Value\]
+&#91;image: Figure 6-1: The COLLECTION records grouped by Part Of, with the total of Value\]
 
 ### Choosing what the report shows
 
@@ -322,7 +325,7 @@ Two choices at the top of the report window decide what it shows. Press TAB (or 
 | Group by | Any field, or (none) | Makes one line for each different value of the field, in alphabetical order |
 | Total of | Any Number or Money field, or (none) | Adds up that field for each group and for the whole report |
 
-When you first open the report, MouseDB picks a likely grouping for you: the first short Text field after the first field (such as Maker or State), or else a Yes/No field.
+When you first open the report, MouseDB picks a likely grouping for you: the Part Of field if the form has one, otherwise the first short Text field after the first field (such as Maker or State), or else a Yes/No field.
 
 ### Reading the report
 
@@ -413,7 +416,7 @@ The sheet is saved in the MouseDB folder, and a message tells you how many recor
 | Rows 2 and on | One record per row, in the order of the list |
 | Two rows below the last record | `Total` in the first Text column, and a live `+SUM` formula under each Money column (or each Number column when the form has no Money field) |
 
-- Text, Date and Yes/No fields become text cells. Dates stay as YYYY-MM-DD.
+- Text, Date and Yes/No fields become text cells. Dates stay as YYYY-MM-DD. No. and Part Of fields become plain numbers.
 - Number fields become numbers, and Money fields become numbers shown as dollars and cents.
 - Blank fields become empty cells.
 - Each column is made as wide as its field, and the columns that fit are set up to show across Mouse Calc's 80-column screen.
@@ -442,7 +445,7 @@ Each cell is changed into the type of its field, just as if you had typed it. A 
 
 You can turn any Mouse Calc sheet into a new database. Choose New Database, click Cancel in the Design Form window, and then choose Import from Mouse Calc. Because the new database has no form, MouseDB offers to **Create** one from the sheet:
 
-- Each heading in row 1 becomes a field (up to 16), all of them in the list.
+- Each heading in row 1 becomes a field (up to 16), all of them in the list. Columns headed No. and Part Of become fields of those types (Chapter 9).
 - A column of plain numbers becomes a Number field; numbers shown as dollars, or with cents, make a Money field.
 - A column of dates becomes a Date field, and a column of Yes and No (or Y, N, True, False) a Yes/No field.
 - Anything else becomes a Text field, as long as the longest entry plus 10 characters, up to 56.
@@ -450,6 +453,63 @@ You can turn any Mouse Calc sheet into a new database. Choose New Database, clic
 Afterward, choose Design Form to rename fields, adjust lengths, or take fields out of the list, then save the new database with Save As.
 
 > **By the Way:** If a sheet has more rows than fit in memory, MouseDB imports as many as fit and tells you that some rows did not fit.
+
+## Chapter 9: Records Inside Records
+
+MouseDB 1.1 can keep track of what is inside what: the cards in a computer, the drive on its controller card, the box on a shelf in the closet and everything in the box. Any record can be inside another record, to any depth.
+
+The COLLECTION sample works this way. Open it to follow along.
+
+### The No. and Part Of fields
+
+Two field types make this work. You add them in Design Form like any other field.
+
+| Type | What it holds |
+| --- | --- |
+| No. | A number from 1 to 999 that MouseDB gives each record. A record keeps its No. for good, however you sort, change or delete other records. You can't type in a No. field. |
+| Part Of | The No. of the record this one is inside, or nothing when it isn't inside anything. In the list it shows that record's name. |
+
+A form can have one No. field and one Part Of field. A Part Of field needs a No. field, because it refers to records by their numbers.
+
+When you add a No. field to a database that already has records, MouseDB numbers them 1, 2, 3 and so on, in the order of the list. A new record gets the next number, and Duplicate Record gives the copy a number of its own. Once No. 999 has been used, MouseDB uses the smallest number that is free.
+
+> **By the Way:** A record's name is its first Text field, such as Item or Name. MouseDB uses it wherever it shows a record that another one is part of.
+
+### Putting a record inside another
+
+Open the record and move to its Part Of field.
+
+- Press RIGHT ARROW or LEFT ARROW (or click the arrows) to step through the records it can go in. The name of the one you've chosen appears to the right of the number.
+- Or type the No. of the record it belongs in, such as `5`.
+- Press CONTROL-X when it isn't inside anything.
+
+When you click OK, MouseDB checks the Part Of field. It won't accept a No. that no record has, and it won't let a record be part of itself or of a record that is inside it, since that would make a loop.
+
+### The list as a tree
+
+Choose By Part Of from the Sort menu to see the database as a tree. Each record is followed by the records inside it, and each level is indented two more spaces in the name column, as in Figure 2-1. A database with a Part Of field opens in this order, and the list stays in it as you add and change records.
+
+### Moving and taking out
+
+- To move a record, change its Part Of. Everything inside it moves along with it.
+- To take a record out of its container, clear its Part Of with CONTROL-X.
+- When you delete a record that holds others, MouseDB tells you how many. They stay in the database but are no longer part of anything; whatever is inside them stays inside them.
+
+### Finding, selecting and reporting
+
+- **Find** also looks in the names shown in Part Of. After finding `closet` in Hall Closet itself, Find Next goes on to the records inside it.
+- In **Select Records**, a word beside Part Of matches the name of the record it is in: `shelf` finds everything on the shelf. A number compares Nos., so `=12` finds the records directly inside No. 12. `=` finds the records that aren't inside anything, and `/` the ones that are.
+- Beside No., numbers and ranges work as for a Number field, such as `10..20`.
+- The **Report** groups by Part Of when the form has one, so you can see how many things are in each computer or box and what they're worth. Each record counts in the group of the record it is directly inside.
+
+### Part Of and Mouse Calc
+
+- **Export** writes No. and Part Of as plain numbers, so the sheet keeps the links.
+- **Import with Replace** keeps the numbers from the sheet.
+- **Import with Add** moves the sheet's numbers past the largest No. already in use. The new records keep their links to each other, and any repeated number is replaced with a free one.
+- **Create** makes columns headed No. and Part Of into fields of those types, so a database exported from MouseDB comes back with its tree.
+
+> **Important!** MouseDB 1.0 can't open a database that has a No. or Part Of field. Use MouseDB 1.1 or later for those databases.
 
 ## Appendix A: Command Summary
 
@@ -476,7 +536,7 @@ Open-Apple commands work from the main screen. Solid-Apple (Option on the IIGS) 
 | Record | Delete Selected… |  | Removes every record in the list |
 | Record | Find… | Open-Apple-F | Finds a record containing some text |
 | Record | Find Next | Open-Apple-G | Finds the next one |
-| Sort | By (field) |  | Sorts by that field; again to reverse |
+| Sort | By (field) |  | Sorts by that field; again to reverse. By Part Of shows the tree |
 | View | Select Records… | Open-Apple-L | Shows only records that match |
 | View | Show All Records | Open-Apple-A | Shows every record again |
 | View | Report… | Open-Apple-R | Groups, counts and totals the list |
@@ -505,7 +565,7 @@ Open-Apple commands work from the main screen. Solid-Apple (Option on the IIGS) 
 
 ## Appendix B: Messages
 
-Messages are listed alphabetically by their first words.
+Messages are listed alphabetically by their first words. The messages about No. and Part Of come at the end.
 
 | Message | What it means | What to do |
 | --- | --- | --- |
@@ -541,6 +601,12 @@ Messages are listed alphabetically by their first words.
 | Two fields have the same name. | Field names must differ. | Rename one of them. |
 | With this form only (n) records fit in memory | The new form makes records too long for the records you have. | Make fields shorter, or delete records first. |
 | /RAM has files on it… | MouseDB is keeping records in main memory only. | Quit, copy the files off /RAM, and start MouseDB again for room for 250 records. |
+| A form can have only one field of type No. / of type Part Of. | Design Form found two No. fields or two Part Of fields. | Change the type of one of them. |
+| A Part Of field holds the No. of another record, so the form needs a field of type No. as well. | The form has Part Of but no No. | Add a No. field, or change Part Of to another type. |
+| A record can't be part of itself, or of a record that is inside it. | The Part Of you chose would make a loop. | Choose another record, or press CONTROL-X. |
+| It holds 3 records. They stay, no longer part of anything. | Part of the Delete Record message: other records are inside this one. | Click Delete, or Cancel and move them first. |
+| No record has the No. typed in Part Of. | The number typed in Part Of belongs to no record. | Choose a record with LEFT ARROW and RIGHT ARROW, or press CONTROL-X. |
+| The number in Part Of is too large. The largest is 999. | Record numbers go from 1 to 999. | Type a smaller number. |
 
 ## Appendix C: Technical Information
 
@@ -548,7 +614,7 @@ Messages are listed alphabetically by their first words.
 
 | Item | Limit |
 | --- | --- |
-| Records in a database | 250 with 128K and /RAM free; on a 64K Apple or with files on /RAM, about 7,800 bytes of records (for example, 57 records of 137 bytes) |
+| Records in a database | 250 with 128K and /RAM free; on a 64K Apple or with files on /RAM, about 2,400 bytes of records (for example, 18 records of 128 bytes) |
 | Fields in a form | 16 |
 | Field name | 15 characters |
 | Text field | 1 to 56 characters |
@@ -559,6 +625,8 @@ Messages are listed alphabetically by their first words.
 | Databases or sheets in the Open and Import lists | 14 |
 | Report groups | 9, plus All others |
 | Database and sheet names | 15 characters, ProDOS rules |
+| Record numbers (No.) | 1 to 999 |
+| Levels of Part Of | Any; up to 10 are shown indented |
 
 ### Field sizes
 
@@ -568,10 +636,11 @@ Messages are listed alphabetically by their first words.
 | Number, Money | 4 (Money is kept in cents) |
 | Date | 11 |
 | Yes/No | 1 |
+| No., Part Of | 2 |
 
 ### Memory
 
-MOUSEDB.SYSTEM loads at $2000 and its title picture fills hi-res page 1. Once the title screen is gone, MouseDB moves its Mouse Calc code down over the picture. Records live in the auxiliary 64K from $0800 to $BFFF, reached with the AUXMOVE routine, with leftover room in main memory used too. When /RAM is empty, MouseDB disconnects it as Apple's ProDOS Technical Note #10 describes, and reconnects and formats it on Quit.
+MOUSEDB.SYSTEM loads at $2000, where its Mouse Calc and file-list code stays. While the title screen is up, MouseDB puts that code aside in auxiliary memory and unpacks the title picture in its place; afterwards the memory that held the packed picture holds the No. tables and records. Records live in the auxiliary 64K from $0800 to $BFFF, reached with the AUXMOVE routine, with leftover room in main memory used too. When /RAM is empty, MouseDB disconnects it as Apple's ProDOS Technical Note #10 describes, and reconnects and formats it on Quit.
 
 ### The database file
 
@@ -593,8 +662,8 @@ MOUSEDB1
 ```
 
 - Line 1 is `MOUSEDB1`, and line 2 the number of fields.
-- Each field is a line of name, type (1 Text, 2 Number, 3 Money, 4 Date, 5 Yes/No), length (for Text, the length you chose; for other types, the width of the column) and In list (1 or 0).
-- Then comes the number of records, and each record as one quoted line per field. Numbers are written plainly (`1985`, `-5`), Money with two decimals (`125.50`), dates as YYYY-MM-DD, and Yes/No as `Yes`, `No` or empty.
+- Each field is a line of name, type (1 Text, 2 Number, 3 Money, 4 Date, 5 Yes/No, 6 No., 7 Part Of), length (for Text, the length you chose; for other types, the width of the column) and In list (1 or 0).
+- Then comes the number of records, and each record as one quoted line per field. Numbers are written plainly (`1985`, `-5`), Money with two decimals (`125.50`), dates as YYYY-MM-DD, and Yes/No as `Yes`, `No` or empty. No. and Part Of are written as numbers, and empty when blank.
 
 ### Mouse Calc sheets
 
@@ -624,6 +693,7 @@ Mouse Calc sheets are ProDOS files of type $F8. MouseDB writes Mouse Calc 1.1's 
 | Import brought in blank columns. | The headings don't match the field names. | Rename the field or the heading so they match. |
 | A column I want doesn't show in the list. | It isn't marked In list, or the columns are wider than 80 characters. | In Design Form, mark it In list, shorten Text fields, or take other fields out of the list. |
 | MouseDB starts with Untitled instead of my database. | MOUSEDB.LAST is missing or names a file that isn't there. | Open your database; MouseDB will remember it from then on. |
+| Part Of shows a number with a question mark, such as No. 12? | No record has that No., for example after importing part of a sheet. | Open the record and choose the right one in Part Of, or clear it with CONTROL-X. |
 
 ## Glossary
 
@@ -640,3 +710,6 @@ Mouse Calc sheets are ProDOS files of type $F8. MouseDB writes Mouse Calc 1.1's 
 - **Record:** one filled-in form.
 - **Selection:** the records that match the Select Records criteria, shown in place of the whole database.
 - **Sheet:** a Mouse Calc spreadsheet file.
+- **No.:** a record number from 1 to 999 that MouseDB gives each record and never changes.
+- **Part Of:** a field that holds the No. of the record this one is inside.
+- **Tree order:** the list sorted By Part Of, with each record followed by the records inside it.
