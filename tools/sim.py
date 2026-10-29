@@ -571,8 +571,19 @@ class Apple:
         img.save(path)
 
 
-def boot(binpath, voldir, mouse=True, prefix='', startpath='', mem128=True, ram=None):
+def boot(binpath, voldir, mouse=True, prefix='', startpath='', mem128=True, ram=None, garbage=None):
     a = Apple(voldir, mouse=mouse, mem128=mem128, ram=ram)
+    if garbage is None:
+        garbage = os.environ.get('SIM_GARBAGE')
+    if garbage:
+        # a real Apple's memory isn't cleared: fill what ProDOS leaves to
+        # programs with junk, so anything the program forgets to set up shows
+        import random
+        rnd = random.Random(int(garbage) if str(garbage).isdigit() else 1)
+        junk = lambda n: bytes(rnd.randrange(256) for _ in range(n))
+        a.main[0x0300:0x03D0] = junk(0xD0)
+        a.main[0x0800:0xBF00] = junk(0xB700)
+        a.aux[0x0200:0xC000] = junk(0xBE00)
     a.prefix = prefix
     sp = startpath.encode()
     a.main[0x280] = len(sp)

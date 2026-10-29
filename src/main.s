@@ -14,7 +14,26 @@
 
         .segment "CODE"
 start:  cld
-        sta KBDSTRB
+        ; clear the variables ($1000 on): ProDOS doesn't, and a real
+        ; Apple's memory holds whatever was there before
+        lda #<__BSS_RUN__
+        sta ptr1
+        lda #>__BSS_RUN__
+        sta ptr1+1
+        ldy #0
+@z:     lda ptr1+1
+        cmp #>(__BSS_RUN__ + __BSS_SIZE__)
+        bcc @z1
+        lda ptr1
+        cmp #<(__BSS_RUN__ + __BSS_SIZE__)
+        bcs @zd
+@z1:    tya
+        sta (ptr1),y
+        inc ptr1
+        bne @z
+        inc ptr1+1
+        bne @z
+@zd:    sta KBDSTRB
         ; need an enhanced IIe, IIc or IIgs (MouseText + 80 columns)
         lda $FBB3
         cmp #$06

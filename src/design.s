@@ -440,7 +440,14 @@ cmd_design:
         ldx dd_i
         inx
         bne @cp
-@cpd:   lda #0
+@cpd:   ldx dn                  ; the new row starts out blank
+        cpx #MAXFIELDS
+        bcs @cpe
+        jsr dnptr
+        lda #0
+        tay
+        sta (ptr2),y
+@cpe:   lda #0
         sta drow
         sta dcol
 @full:  jsr hidecursor

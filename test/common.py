@@ -7,6 +7,8 @@ def fresh(v, files=()):
     shutil.rmtree(v, ignore_errors=True); os.makedirs(v)
     for f in files: shutil.copy(f, v + '/' + os.path.basename(f))
 def start(vol='test/vol', **kw):
+    # memory starts full of junk, as on a real Apple (SIM_GARBAGE=0 for zeros)
+    kw.setdefault('garbage', os.environ.get('SIM_GARBAGE', '7') if os.environ.get('SIM_GARBAGE', '7') != '0' else None)
     a = boot('build/RETRODB.SYSTEM', vol, **kw); a.run(); a.key(' '); a.run(); return a
 def show(a):
     print(a.plain()); print('-' * 80)

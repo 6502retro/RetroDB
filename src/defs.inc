@@ -105,6 +105,7 @@ colmap    = $0384       ; 64 bytes
         .import __LCODE_RUN__, __LCODE_SIZE__
         .import __XBSS_RUN__, __XBSS_SIZE__
         .import __SPLZ_RUN__, __SPLZ_SIZE__
+        .import __BSS_RUN__, __BSS_SIZE__
 POOLA     = __XBSS_RUN__ + __XBSS_SIZE__  ; main memory left after LCODE
 POOLA_END = $4000
 TBASE     = __SPLZ_RUN__                  ; nesting tables (nest.s), over
