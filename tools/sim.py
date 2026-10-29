@@ -1,8 +1,8 @@
-"""Minimal enhanced Apple IIe for testing MOUSEDB.SYSTEM (from RetroInv's harness).
+"""Minimal enhanced Apple IIe for testing RETRODB.SYSTEM (from RetroInv's harness).
 
 Emulates: 6502 (py65), 64K main + aux text page, 80STORE/PAGE2 banking,
 ALTCHARSET MouseText, keyboard + Open-Apple, an AppleMouse in slot 4,
-the AUXMOVE firmware routine, and the ProDOS MLI calls MouseDB uses, backed
+the AUXMOVE firmware routine, and the ProDOS MLI calls RetroDB uses, backed
 by a host directory.  /RAM can be made present (empty or holding files).
 """
 import os
@@ -41,7 +41,7 @@ class Mem:
 
 
 class Apple:
-    def __init__(self, voldir, volname='MOUSEDB', mouse=True, mem128=True, ram=None):
+    def __init__(self, voldir, volname='RETRODB', mouse=True, mem128=True, ram=None):
         self.main = bytearray(65536)
         self.aux = bytearray(65536)
         self.store80 = self.page2 = self.col80 = self.alt = False
@@ -577,8 +577,8 @@ def boot(binpath, voldir, mouse=True, prefix='', startpath='', mem128=True, ram=
     sp = startpath.encode()
     a.main[0x280] = len(sp)
     a.main[0x281:0x281 + len(sp)] = sp
-    lbl = os.path.join(os.path.dirname(binpath), 'mousedb.lbl')
-    if os.path.exists(lbl):         # MouseDB waits for input in kbget
+    lbl = os.path.join(os.path.dirname(binpath), 'retrodb.lbl')
+    if os.path.exists(lbl):         # RetroDB waits for input in kbget
         for line in open(lbl):
             _, v, n = line.split()
             if n in ('.kbget', '.spkey'):

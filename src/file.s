@@ -1,7 +1,7 @@
 ; ---------------------------------------------------------------
 ; ProDOS file I/O.  A database is a text file (type $04):
 ;
-;   MOUSEDB1
+;   RETRODB1
 ;   number of fields
 ;   "name",kind,length,in-list      one line per field
 ;   number of records
@@ -11,12 +11,12 @@
 ; as plain text: Money as 1234.50, Yes/No as Yes or No, blank as "".
 ;
 ; Saving never overwrites the database in place: the new copy is written
-; to MOUSEDB.SAVING, and only when that worked is the old file replaced.
+; to RETRODB.SAVING, and only when that worked is the old file replaced.
 ; ---------------------------------------------------------------
         .segment "DATA"
 pathname:   .byte 0
             .res 15
-tmpname:    .byte 14, "MOUSEDB.SAVING"
+tmpname:    .byte 14, "RETRODB.SAVING"
 destroy_p:  .byte 1
 dp_path:    .word tmpname
 rename_p:   .byte 2
@@ -55,7 +55,8 @@ prefix_p:   .byte 1
 online_p:   .byte 2
 ol_unit:    .byte 0
             .word PREFIXBUF+1
-s_hdr:      .byte "MOUSEDB1", 0
+s_hdr:      .byte "RETRODB1", 0
+s_hdr0:     .byte "MOUSEDB1", 0       ; files saved by MouseDB 1.0/1.1
 quit_parms: .byte 4, 0
             .word 0
             .byte 0
@@ -63,7 +64,7 @@ quit_parms: .byte 4, 0
 
         .segment "CODE"
 
-; fixprefix: work in the folder MouseDB was started from (ProDOS
+; fixprefix: work in the folder RetroDB was started from (ProDOS
 ; leaves its pathname at $0280), or if no prefix is set, the boot volume
 fixprefix:
         ldx $0280               ; a path with a "/" in it?
@@ -213,7 +214,7 @@ nextint:
         rts
 
 ; doload: open the database in pathname.  Carry set + A = error
-; ($80 = not a MouseDB database).
+; ($80 = not a RetroDB database).
 doload: lda #0
         sta ld_over
         sta ld_short
@@ -225,13 +226,8 @@ doload: lda #0
         MLICALL $C9, newline_p
         jsr readline
         jcs @rerr
-        ldx #0                  ; "MOUSEDB1"
-@h:     lda s_hdr,x
-        cmp LINEBUF,x
-        jne @notdb
-        inx
-        cpx #9
-        bne @h
+        jsr hdrok               ; "RETRODB1" (or MouseDB's "MOUSEDB1")
+        jcs @notdb
         jsr readline
         jcs @rerr
         jsr lineint
@@ -460,7 +456,7 @@ lb_num8:
         ldy #>numbuf
         jmp lb_zstr
 
-; dosave: write the database to MOUSEDB.SAVING, then swap it in for
+; dosave: write the database to RETRODB.SAVING, then swap it in for
 ; the old file.  On any error the old file is left as it was.
 dosave: lda #<tmpname           ; work on the temporary file
         sta dp_path
@@ -619,3 +615,27 @@ ld_short: .res 1
 sv_i:     .res 1
 sv_f:     .res 1
 lblen:    .res 1
+
+        .segment "CODE"
+; hdrok: is LINEBUF "RETRODB1", or "MOUSEDB1" (saved by MouseDB, as
+; RetroDB was first called)?  carry clear = yes
+hdrok:  ldx #0
+@a:     lda s_hdr,x
+        cmp LINEBUF,x
+        bne @old
+        inx
+        cpx #9
+        bne @a
+        clc
+        rts
+@old:   ldx #0
+@b:     lda s_hdr0,x
+        cmp LINEBUF,x
+        bne @no
+        inx
+        cpx #9
+        bne @b
+        clc
+        rts
+@no:    sec
+        rts

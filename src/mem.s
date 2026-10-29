@@ -17,7 +17,7 @@
 ; ---------------------------------------------------------------
 ; auxinit: decide whether the auxiliary 64K can hold records.
 ; It can if the Apple has 128K and /RAM is absent or empty; an empty
-; /RAM is disconnected (and put back when MouseDB quits).
+; /RAM is disconnected (and put back when RetroDB quits).
 ; ---------------------------------------------------------------
 auxinit:
         lda #0

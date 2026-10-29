@@ -1,4 +1,4 @@
-# MouseDB 1.1: record numbers (No.) and Part Of, nested to any depth
+# RetroDB 1.1: record numbers (No.) and Part Of, nested to any depth
 import sys; sys.path.insert(0, 'test')
 from common import *
 V = 'test/v8'; fresh(V)
@@ -7,7 +7,7 @@ R = [['1', 'Desk', '', ''], ['2', 'Apple IIe', '1', '450'], ['3', '80-Column Car
      ['4', 'Mouse Card', '2', '45'], ['5', 'Shelf', '', ''], ['6', 'Joystick', '5', '5'],
      ['7', 'Box A', '5', ''], ['8', 'Oregon Trail', '7', '20']]
 open(V + '/GEAR', 'wb').write(dbfile('GEAR', F, R))
-open(V + '/MOUSEDB.LAST', 'wb').write(b'GEAR\r')
+open(V + '/RETRODB.LAST', 'wb').write(b'GEAR\r')
 a = start(V)
 L = listrows(a, 8)
 check('Part Of shows the name of the record it is in', L[1].split()[3:4] == ['Desk'] and 'Apple IIe' in L[2][27:])
@@ -116,7 +116,7 @@ a.key('\r'); a.run(); a.key(0x1B); a.run()
 # a file with blank, repeated and too-large Nos.: each record gets its own
 fresh(V)
 open(V + '/ODD', 'wb').write(dbfile('ODD', F, [['', 'A', '', ''], ['3', 'B', '', ''], ['3', 'C', '3', ''], ['1000', 'D', '3', '']]))
-open(V + '/MOUSEDB.LAST', 'wb').write(b'ODD\r')
+open(V + '/RETRODB.LAST', 'wb').write(b'ODD\r')
 a = start(V)
 L = listrows(a, 4)
 nos = [int(r[:4]) for r in L]
@@ -125,9 +125,21 @@ check('the first record keeps No. 3; links to 3 stay with it: %s' % L, L[1].star
 # adding a No. field to a database numbers its records in list order
 fresh(V)
 open(V + '/PLAIN', 'wb').write(dbfile('PLAIN', [('Name', 'Text', 20, 1)], [['x'], ['y'], ['z']]))
-open(V + '/MOUSEDB.LAST', 'wb').write(b'PLAIN\r')
+open(V + '/RETRODB.LAST', 'wb').write(b'PLAIN\r')
 a = start(V)
 menu(a, 1, 5); a.key(0x0A); design(a, [('No.', 'No.', 0, 1)])
 L = listrows(a, 3)
 check('new No. field numbers the records 1-3: %s' % L, [r.split()[-1] for r in L] == ['1', '2', '3'])
+# a database saved by MouseDB (header MOUSEDB1) still opens, and is
+# saved as RETRODB1
+fresh(V)
+open(V + '/OLD', 'wb').write(dbfile('OLD', [('Name', 'Text', 20, 1)], [['kept']]).replace(b'RETRODB1', b'MOUSEDB1'))
+open(V + '/RETRODB.LAST', 'wb').write(b'OLD\r')
+a = start(V)
+check('a MouseDB file opens', listrows(a, 1)[0].startswith('kept'))
+a.key('O', oa=True); a.run()
+check('and is listed in Open', 'OLD' in a.plain())
+a.key(0x1B); a.run()
+newrec(a, ['more']); a.key('S', oa=True); a.run()
+check('saved as RETRODB1', lines(V, 'OLD')[0] == 'RETRODB1')
 done()

@@ -1,5 +1,5 @@
 ; ---------------------------------------------------------------
-; MouseDB 1.1 - a forms database for the Apple II
+; RetroDB 1.1 - a forms database for the Apple II
 ; by 6502Retro.  ProDOS 8 system program, 80-column MouseText UI.
 ; Built on the RetroInv 2.5 engine.
 ; ---------------------------------------------------------------
@@ -1418,7 +1418,7 @@ saveerror:
         ldy #>al_error
         jmp alert
 
-; mb_errtext: A = ProDOS error code (or $80 = not a MouseDB file)
+; mb_errtext: A = ProDOS error code (or $80 = not a RetroDB file)
 mb_errtext:
         cmp #$80
         bne @e0
@@ -1451,7 +1451,7 @@ mb_errtext:
 t_new:     .byte "New Record", 0
 t_edit:    .byte "Edit Record", 0
 t_dup:     .byte "Duplicate Record", 0
-t_alert:   .byte "MouseDB", 0
+t_alert:   .byte "RetroDB", 0
 s_saving:  .byte "Saving", G_DOTS, 0
 s_delq:    .byte "Delete this record?||", 0
 s_kids1:   .byte "||It holds ", 0
@@ -1469,13 +1469,13 @@ s_wp:      .byte "The disk is write-protected.", 0
 s_full:    .byte "The disk is full.", 0
 s_io:      .byte "Disk I/O error.", 0
 s_perr:    .byte "ProDOS error $", 0
-s_notdb:   .byte "It isn't a MouseDB database.", 0
-s_about:   .byte "MouseDB 1.1 for the Apple II||"
+s_notdb:   .byte "It isn't a RetroDB database.", 0
+s_about:   .byte "RetroDB 1.1 for the Apple II||"
            .byte "A forms database in the spirit|"
            .byte "of PFS:File, by 6502Retro", 0
 s_fullm:   .byte "The database is full. Start a|"
            .byte "second one with New Database.", 0
-s_ramfull: .byte "/RAM has files on it, so MouseDB|"
+s_ramfull: .byte "/RAM has files on it, so RetroDB|"
            .byte "is keeping records in main memory|"
            .byte "only, and fewer of them fit.", 0
 s_revq:    .byte "Discard your changes and reload|"

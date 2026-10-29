@@ -2,8 +2,8 @@
 ; Several databases: New Database, Open, Save As, the shared
 ; "save changes?" prompt, and remembering the last database used.
 ;
-; Databases are text files in the MouseDB folder whose first line is
-; MOUSEDB1.  MOUSEDB.LAST holds the name of the one to open at startup.
+; Databases are text files in the RetroDB folder whose first line is
+; RETRODB1.  RETRODB.LAST holds the name of the one to open at startup.
 ; ---------------------------------------------------------------
         .segment "RODATA"
 t_open:    .byte "Open Database", 0
@@ -12,7 +12,7 @@ b_open:    .byte "Open", 0
 pk_open:   .word t_open, s_openh, b_open
 t_saveas:  .byte "Save As", 0
 s_sal1:    .byte "Save this database under a new", 0
-s_sal2:    .byte "name in the MouseDB folder:", 0
+s_sal2:    .byte "name in the RetroDB folder:", 0
 nd_saveas: .word t_saveas, s_sal1, s_sal2, b_save, NEWNAME
 s_noinv:   .byte "There are no databases in this|"
            .byte "folder yet. Choose New Database|"
@@ -41,7 +41,7 @@ al_savech: .word t_alert, MSGBUF
            .word b_save, b_dont, b_cancel
 s_untitled: .byte "Untitled", 0
 s_invlbl:  .byte "Database: ", 0
-s_lastnm:  .byte 12, "MOUSEDB.LAST"
+s_lastnm:  .byte 12, "RETRODB.LAST"
 
         .segment "DATA"
 NEWNAME:   .byte 0
@@ -335,7 +335,7 @@ saveas_flow:
 @bad:   LDAY al_badnm2
         jsr alert
         jmp @dlg
-@nown:  jsr ownname             ; MouseDB's own files
+@nown:  jsr ownname             ; RetroDB's own files
         beq @notinv
         ; does a file with this name exist already?
         MLICALL $C4, nfi_p
@@ -400,7 +400,7 @@ saveas_flow:
         clc
         rts
 
-; ownname: Z set if NEWNAME is MOUSEDB.LAST, .SAVING or .SYSTEM
+; ownname: Z set if NEWNAME is RETRODB.LAST, .SAVING or .SYSTEM
 ownname:
         LDAY NEWNAME
         jsr setp1
@@ -418,11 +418,11 @@ ownname:
 @d:     rts
 
         .segment "RODATA"
-s_sysnm:   .byte 14, "MOUSEDB.SYSTEM"
+s_sysnm:   .byte 14, "RETRODB.SYSTEM"
         .segment "CODE"
 
 ; ---------------------------------------------------------------
-; scandb: DIRNAMES = the databases in the MouseDB folder
+; scandb: DIRNAMES = the databases in the RetroDB folder
 ; ---------------------------------------------------------------
 scandb: lda #$04
         sta sd_type
@@ -438,7 +438,7 @@ dbfilter:
         bcs @done
         sta dsel
         jsr dselptr
-        LDAY s_lastnm           ; never list MOUSEDB.LAST
+        LDAY s_lastnm           ; never list RETRODB.LAST
         jsr setp2
         jsr namecmp
         beq @skip
@@ -470,7 +470,7 @@ dirptr2:
         sta ptr2+1
         rts
 
-; isdb: does the file named at ptr1 start with MOUSEDB1?  carry clear = yes
+; isdb: does the file named at ptr1 start with RETRODB1?  carry clear = yes
 isdb:   lda ptr1
         sta lo_path
         lda ptr1+1
@@ -486,20 +486,12 @@ isdb:   lda ptr1
         MLICALL $CC, close_p
         plp
         bcs @no
-        ldx #0
-@c:     lda s_hdr,x
-        cmp LINEBUF,x
-        bne @no
-        inx
-        cpx #9
-        bne @c
-        clc
-        rts
+        jmp hdrok
 @no:    sec
         rts
 
 ; ---------------------------------------------------------------
-; MOUSEDB.LAST: remember the database in use
+; RETRODB.LAST: remember the database in use
 ; ---------------------------------------------------------------
 ; writelast: errors (such as a write-protected disk) are ignored
 writelast:
@@ -529,7 +521,7 @@ writelast:
         MLICALL $CC, close_p
 @d:     rts
 
-; readlast: if MOUSEDB.LAST names a database, put it in pathname.
+; readlast: if RETRODB.LAST names a database, put it in pathname.
 ; carry set if there is none.
 readlast:
         LDAY s_lastnm

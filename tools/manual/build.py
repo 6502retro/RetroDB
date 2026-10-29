@@ -1,4 +1,4 @@
-"""Typeset the MouseDB Owner's Manual as an 80s Apple-style PDF.
+"""Typeset the RetroDB Owner's Manual as an 80s Apple-style PDF.
 
 Pass 1 renders with invisible markers to learn the page of every heading;
 pass 2 renders the same layout with real page numbers in the contents.
@@ -16,9 +16,9 @@ from PIL import Image
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 FONTS = os.path.join(HERE, 'fonts')
-SRC = '/home/claude/mousedb/manual'
+SRC = '/home/claude/retrodb/manual'
 IMG = os.path.join(HERE, 'img')
-LOGO = '/home/claude/mousedb/art/6502retro-logo.png'
+LOGO = '/home/claude/retrodb/art/6502retro-logo.png'
 OUT = sys.argv[1]
 MD = open(os.path.join(HERE, 'manual.md')).read()
 
@@ -58,7 +58,7 @@ for p in parts:
     if p.startswith('## '):
         title, _, rest = p.partition('\n')
         sections.append((title[3:].strip(), rest))
-assert sections[0][0] == 'MouseDB 1.1'
+assert sections[0][0] == 'RetroDB 1.1'
 front, chapters = sections[0], sections[1:]
 # the glossary goes with Appendix D
 if chapters[-1][0] == 'Glossary':
@@ -157,9 +157,9 @@ def body_html(pages):
     fr = front[1]
     notice = fr.split('### Notice', 1)[1]
     copy = f'''<section class="copy"><div class="copyin">{stripes('stripes thin')}
-<p class="cprod">MouseDB 1.1 Owner&rsquo;s Manual</p>
+<p class="cprod">RetroDB 1.1 Owner&rsquo;s Manual</p>
 {md2html(notice, False)}
-<p class="cfoot">&copy; 2026 Jonathan Adar (6502Retro). MouseDB is released under the MIT License.</p>
+<p class="cfoot">&copy; 2026 Jonathan Adar (6502Retro). RetroDB is released under the MIT License.</p>
 </div><span class="mk">@@copy@@</span></section>'''
     return f'''<!doctype html><html><head><meta charset="utf-8"><style>{css()}</style></head><body>
 {copy}{''.join(toc)}{''.join(chap_html)}</body></html>''', toc_items
@@ -170,7 +170,7 @@ def cover_html():
 <div class="cover">
   <div class="cband"><p class="capple">For the Apple IIe, Apple IIc and Apple IIGS</p></div>
   <div class="cmid">
-    <p class="ctitle">MouseDB</p>
+    <p class="ctitle">RetroDB</p>
     <p class="csub">Forms Database &middot; Version 1.1</p>
     <div class="monitor"><img src="file://{IMG}/splash.png"></div>
     <p class="cown">Owner&rsquo;s Manual</p>
@@ -184,7 +184,7 @@ def back_html():
 <div class="back">
   {stripes('cstripes top')}
   <div class="bmid"><img class="logo" src="file://{IMG}/logo.png">
-  <p>MouseDB 1.1 &middot; a forms database for the Apple II</p>
+  <p>RetroDB 1.1 &middot; a forms database for the Apple II</p>
   <p class="small">6502Retro &middot; Retro Computing</p></div>
 </div></body></html>'''
 
@@ -268,6 +268,6 @@ for i, page in enumerate(body.pages):
     page.merge_page(PdfReader(buf).pages[0])
     w.add_page(page)
 w.add_page(PdfReader(os.path.join(HERE, 'back.pdf')).pages[0])
-w.add_metadata({'/Title': "MouseDB Owner's Manual", '/Author': '6502Retro'})
+w.add_metadata({'/Title': "RetroDB Owner's Manual", '/Author': '6502Retro'})
 w.write(OUT)
 print('pages', len(w.pages), 'chapter 1 at pdf page', first + 2)

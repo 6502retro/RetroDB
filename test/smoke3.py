@@ -1,7 +1,7 @@
 import sys; sys.path.insert(0, 'test')
 from common import *
 V = 'test/vol'
-a = start(V)          # MOUSEDB.LAST -> PEOPLE
+a = start(V)          # RETRODB.LAST -> PEOPLE
 print(rows(a, 0, 8))
 # Sort menu: ESC, right x2 (Sort), down to "By Owes" (index 3), RETURN
 a.key(0x1B); a.key(0x15); a.key(0x15); a.run(); show(a)

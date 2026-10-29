@@ -1,4 +1,4 @@
-# MouseDB: forms, records, validation, saving and loading
+# RetroDB: forms, records, validation, saving and loading
 import sys; sys.path.insert(0, 'test')
 from common import *
 V = 'test/v1'; fresh(V)
@@ -47,14 +47,14 @@ check('bad name refused', 'A ProDOS name starts with a letter' in a.plain())
 a.key('\r'); a.run(); a.key(0x18); a.key('STOCK\r'); a.run()
 check('saved: menu bar says STOCK', 'Database: STOCK' in rows(a, 0, 1) and 'Modified' not in rows(a, 22, 23))
 L = lines(V, 'STOCK')
-check('file header', L[0] == 'MOUSEDB1' and L[1] == '5' and L[2] == '"Name",1,30,1' and L[3] == '"Qty",2,10,1')
+check('file header', L[0] == 'RETRODB1' and L[1] == '5' and L[2] == '"Name",1,30,1' and L[3] == '"Qty",2,10,1')
 check('file kinds', L[4] == '"Price",3,12,1' and L[5] == '"When",4,10,1' and L[6] == '"OK",5,3,1')
 check('file count', L[7] == '4')
 check('file record 1', L[8:13] == ['"Widget"', '"7"', '"1234.50"', '"1984-03-05"', '""'])
 check('file record 2', L[13:18] == ['"Gadget"', '"-5"', '"-0.50"', '"2001-01-02"', '"Yes"'])
 check('file record 4 (blank name, zero)', L[23:28] == ['""', '"0"', '"0.00"', '"1999-12"', '""'])
-check('MOUSEDB.LAST names STOCK', lines(V, 'MOUSEDB.LAST')[0] == 'STOCK')
-check('no MOUSEDB.SAVING left', not os.path.exists(V + '/MOUSEDB.SAVING'))
+check('RETRODB.LAST names STOCK', lines(V, 'RETRODB.LAST')[0] == 'STOCK')
+check('no RETRODB.SAVING left', not os.path.exists(V + '/RETRODB.SAVING'))
 # load it back
 a = start(V)
 check('reopened at start: STOCK', 'Database: STOCK' in rows(a, 0, 1))

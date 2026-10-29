@@ -1,4 +1,4 @@
-"""Build the Mouse Calc sheet header MouseDB writes on export.
+"""Build the Mouse Calc sheet header RetroDB writes on export.
 
 Takes the 0x883-byte program-state header from a real Mouse Calc 1.1 sheet
 (SAMPLE.BILL), sets RetroInv's column widths and on-screen column
@@ -11,7 +11,7 @@ WIDTHS_A, WIDTHS_B, POS_A = 0x29, 0x68, 0xA7
 DEFAULT_WIDTH, MAX_COL = 11, 62
 # A Name, B Maker, C Serial, D Year, E Type, F Condition, G Location, H Value,
 # I Notes, J Slot, K Part Of, L Item No.
-WIDTHS = []   # MouseDB sets the widths when it exports
+WIDTHS = []   # RetroDB sets the widths when it exports
 
 src, out_bin, out_raw = sys.argv[1], sys.argv[2], sys.argv[3]
 h = bytearray(open(src, 'rb').read()[:HEADER_LEN])

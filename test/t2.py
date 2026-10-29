@@ -1,4 +1,4 @@
-# MouseDB: sorting, selecting, finding, the report
+# RetroDB: sorting, selecting, finding, the report
 import sys; sys.path.insert(0, 'test')
 from common import *
 V = 'test/v2'; fresh(V)
@@ -12,7 +12,7 @@ R = [['Karateka', 'Broderbund', '1984', '25', '1990-05-01', 'Yes'],
      ['Choplifter', 'Broderbund', '', '12', '1988-01-10', 'Yes'],
      ['Ultima IV', 'Origin', '1985', '-5', '1992-02-29', 'Yes']]
 open(V + '/GAMES', 'wb').write(dbfile('GAMES', F, R))
-open(V + '/MOUSEDB.LAST', 'wb').write(b'GAMES\r')
+open(V + '/RETRODB.LAST', 'wb').write(b'GAMES\r')
 a = start(V)
 check('loaded GAMES with 7 records', '7 of 250 records' in rows(a, 22, 23))
 def titles(): return [r[:24].strip() for r in listrows(a, 7)]

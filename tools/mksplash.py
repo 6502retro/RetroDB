@@ -1,4 +1,4 @@
-"""Build the MouseDB hi-res splash (280x192 Apple II hi-res, 8192 bytes)
+"""Build the RetroDB hi-res splash (280x192 Apple II hi-res, 8192 bytes)
 from the 6502 Retro Computing logo, plus a PNG preview."""
 import sys
 from PIL import Image
@@ -100,7 +100,7 @@ def text(s, y, color=WHITE):
                         pix[y + r][x + 2 * c + d] = color
         x += pitch
 
-text("MOUSEDB 1.1", 156)
+text("RETRODB 1.1", 156)
 text("FORMS DATABASE", 169)
 text("PRESS ANY KEY OR CLICK", 183)
 

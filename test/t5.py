@@ -1,13 +1,13 @@
-# MouseDB: limits, memory, /RAM, damaged files, the Open list
+# RetroDB: limits, memory, /RAM, damaged files, the Open list
 import sys; sys.path.insert(0, 'test')
 from common import *
 V = 'test/v5'
 F = [('Name', 'Text', 20, 1), ('N', 'Number', 0, 1)]
 L = {}
-for line in open('build/mousedb.lbl'):
+for line in open('build/retrodb.lbl'):
     _, v, n = line.split(); L[n[1:]] = int(v, 16)
 def go(last='DB', **kw):
-    open(V + '/MOUSEDB.LAST', 'wb').write(last.encode() + b'\r')
+    open(V + '/RETRODB.LAST', 'wb').write(last.encode() + b'\r')
     return start(V, **kw)
 # full
 fresh(V); open(V + '/DB', 'wb').write(dbfile('DB', F, [['R%d' % i, str(i)] for i in range(250)]))
@@ -36,10 +36,10 @@ a = go()
 check('short file warns and opens Untitled', "doesn't hold the number" in a.plain() and 'Untitled' in rows(a, 0, 1))
 a.key('\r'); a.run()
 check('the records that are there are loaded', '10 of 250' in rows(a, 22, 23))
-# not a MouseDB file
+# not a RetroDB file
 fresh(V); open(V + '/DB', 'wb').write(b'RETROINV3\r0\r')
 a = go()
-check('MOUSEDB.LAST naming another kind of file: start empty', 'Untitled' in rows(a, 0, 1) and 'no form yet' in a.plain())
+check('RETRODB.LAST naming another kind of file: start empty', 'Untitled' in rows(a, 0, 1) and 'no form yet' in a.plain())
 # no auxiliary memory: main memory only
 fresh(V); open(V + '/DB', 'wb').write(dbfile('DB', [('Name', 'Text', 56, 1), ('X', 'Text', 56, 1)], [['a', 'b']]))
 a = go(mem128=False)
@@ -78,7 +78,7 @@ a.capacity = a.used() + 100
 a.key('S', oa=True); a.run()
 check('disk full: message, file not changed', 'The disk is full.' in a.plain() and 'was not changed' in a.plain())
 check('disk full: SIXTEEN still has 1 record', lines(V, 'SIXTEEN')[18] == '1')
-check('disk full: no MOUSEDB.SAVING left', not os.path.exists(V + '/MOUSEDB.SAVING'))
+check('disk full: no RETRODB.SAVING left', not os.path.exists(V + '/RETRODB.SAVING'))
 a.key('\r'); a.run(); a.capacity = None
 a.key('S', oa=True); a.run()
 check('saved once there is room', lines(V, 'SIXTEEN')[18] == '2')
@@ -89,10 +89,10 @@ open(V + '/NOTES', 'wb').write(b'Just a text file\r')
 a = go('DB03')
 a.key('O', oa=True); a.run()
 p = a.plain()
-check('Open lists databases only', 'DB00' in p and 'NOTES' not in p and 'MOUSEDB.LAST' not in p)
+check('Open lists databases only', 'DB00' in p and 'NOTES' not in p and 'RETRODB.LAST' not in p)
 check('Open: only the first 14', 'Only the first 14 are listed.' in p and 'DB13' in p and 'DB14' not in p)
 pick(a, 'DB07')
-check('opened DB07', 'Database: DB07' in rows(a, 0, 1) and lines(V, 'MOUSEDB.LAST')[0] == 'DB07')
+check('opened DB07', 'Database: DB07' in rows(a, 0, 1) and lines(V, 'RETRODB.LAST')[0] == 'DB07')
 # Save As onto another database / a text file
 a.key('N', oa=True); a.run(); a.key('new\r'); a.run()
 menu(a, 1, 3); a.key(0x18); a.key('DB01\r'); a.run()
@@ -100,5 +100,5 @@ check('Save As over another database asks', 'A database with that name' in a.pla
 a.key(0x1B); a.run(); a.key(0x18); a.key('NOTES\r'); a.run()
 check('Save As over a text file refuses', 'is not a database' in a.plain())
 a.key('\r'); a.run(); a.key(0x18); a.key('NEWDB\r'); a.run()
-check('Save As NEWDB', 'Database: NEWDB' in rows(a, 0, 1) and lines(V, 'NEWDB')[0] == 'MOUSEDB1' and lines(V, 'DB07')[4] == '1')
+check('Save As NEWDB', 'Database: NEWDB' in rows(a, 0, 1) and lines(V, 'NEWDB')[0] == 'RETRODB1' and lines(V, 'DB07')[4] == '1')
 done()

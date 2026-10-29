@@ -19,7 +19,7 @@ mt4:    .byte "View", 0
 mtlo:   .byte <mt0, <mt1, <mt2, <mt3, <mt4
 mthi:   .byte >mt0, >mt1, >mt2, >mt3, >mt4
 
-mi0:    .byte "About MouseDB", G_DOTS, 0
+mi0:    .byte "About RetroDB", G_DOTS, 0
 mi1:    .byte "New Database", G_DOTS, 0
 mi2:    .byte "Open", G_DOTS, 0
 mi3:    .byte "Save", 0
@@ -44,7 +44,7 @@ mikey:  .byte 0, 0,'O','S',0,0,0,'I','X','Q','N','E','C','D',0,'F','G'
         .byte 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
         .byte 'L','A','R'
 
-apptitle: .byte "MouseDB  by 6502Retro", 0
+apptitle: .byte "RetroDB  by 6502Retro", 0
 
         .segment "DATA"
 mcnt:   .byte 1, 9, 7, 1, 3             ; items (Sort: one per field)

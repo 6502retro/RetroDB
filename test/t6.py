@@ -1,10 +1,10 @@
-# MouseDB: the mouse
+# RetroDB: the mouse
 import sys; sys.path.insert(0, 'test')
 from common import *
 V = 'test/v6'; fresh(V)
 F = [('Name', 'Text', 20, 1), ('Qty', 'Number', 0, 1), ('Ok', 'Yes/No', 0, 1)]
 open(V + '/DB', 'wb').write(dbfile('DB', F, [['R%02d' % i, str(i), 'Yes'] for i in range(40)]))
-open(V + '/MOUSEDB.LAST', 'wb').write(b'DB\r')
+open(V + '/RETRODB.LAST', 'wb').write(b'DB\r')
 a = start(V)
 def sel_row():
     for y in range(4, 21):

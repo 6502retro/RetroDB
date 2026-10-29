@@ -1,18 +1,18 @@
 #!/bin/sh
-# Build MOUSEDB.SYSTEM from source (needs cc65's ca65 and ld65)
+# Build RETRODB.SYSTEM from source (needs cc65's ca65 and ld65)
 set -e
 cd "$(dirname "$0")"
 mkdir -p build
 [ -f build/splash.bin ] || python3 tools/mksplash.py art/6502retro-logo.png build/splash.bin build/splash.png
 [ -f build/mchdr.pk ] || python3 tools/mkmchdr.py tools/mcsamples/SAMPLE.BILL build/mchdr.pk build/mchdr.raw
 [ build/splash.lz -nt build/splash.bin ] || python3 tools/mklz.py build/splash.bin build/splash.lz
-ca65 -g -t none -I src -l build/mousedb.lst -o build/mousedb.o src/main.s
-ld65 -C src/mousedb.cfg -m build/mousedb.map -Ln build/mousedb.lbl -o build/MOUSEDB.SYSTEM build/mousedb.o
-ls -l build/MOUSEDB.SYSTEM
+ca65 -g -t none -I src -l build/retrodb.lst -o build/retrodb.o src/main.s
+ld65 -C src/retrodb.cfg -m build/retrodb.map -Ln build/retrodb.lbl -o build/RETRODB.SYSTEM build/retrodb.o
+ls -l build/RETRODB.SYSTEM
 python3 - <<'PY'
 import re
 L = {}
-for line in open("build/mousedb.lbl"):
+for line in open("build/retrodb.lbl"):
     a, v, n = line.split()
     L[n[1:]] = int(v, 16)
 sz = L['__LCODE_SIZE__']

@@ -2,7 +2,7 @@
 ; Nesting: record numbers and Part Of links.
 ;
 ; A form may have one No. field (K_NO) and one Part Of field
-; (K_PARTOF).  Both hold a 2-byte number, 0 = blank.  MouseDB gives
+; (K_PARTOF).  Both hold a 2-byte number, 0 = blank.  RetroDB gives
 ; every record a No. from 1 to 999 that it keeps for good; Part Of
 ; holds the No. of the record this one is inside, to any depth.
 ;

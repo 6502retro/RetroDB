@@ -231,7 +231,7 @@ getevent:
         rts
 
 ; ---------------------------------------------------------------
-; Keys typed while MouseDB is busy (drawing, sorting) are kept in a
+; Keys typed while RetroDB is busy (drawing, sorting) are kept in a
 ; small buffer, with the state of the Apple keys when each was typed.
 ; kbpoll is called for every character drawn.
 ; ---------------------------------------------------------------

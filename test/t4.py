@@ -1,4 +1,4 @@
-# MouseDB: Mouse Calc export and import
+# RetroDB: Mouse Calc export and import
 import sys, subprocess, json; sys.path.insert(0, 'test')
 from common import *
 V = 'test/v4'; fresh(V)
@@ -10,7 +10,7 @@ R = [['Karateka', 'Broderbund', '1984', '25.00', '1990-05-01', 'Yes'],
      ['Zork I', 'Infocom', '1980', '45.50', '', 'Yes'],
      ['Ultima IV', 'Origin', '-1985', '-5.00', '1992-02-29', 'Yes']]
 open(V + '/GAMES', 'wb').write(dbfile('GAMES', F, R))
-open(V + '/MOUSEDB.LAST', 'wb').write(b'GAMES\r')
+open(V + '/RETRODB.LAST', 'wb').write(b'GAMES\r')
 def mc(name):
     r = subprocess.run(['node', 'test/mccheck.js', V + '/' + name], capture_output=True, text=True)
     return r.stdout + r.stderr
@@ -26,7 +26,7 @@ a = go()
 a.key('X', oa=True); a.run()
 check('export suggests GAMES.MC', 'Name: GAMES.MC' in a.plain())
 a.key('\r'); a.run()
-check('exported 5 records', 'Exported 5 records to' in a.plain() and '/MOUSEDB/GAMES.MC' in a.plain())
+check('exported 5 records', 'Exported 5 records to' in a.plain() and '/RETRODB/GAMES.MC' in a.plain())
 a.key('\r'); a.run()
 out = mc('GAMES.MC'); print(out)
 check('sheet: 8 rows, 6 columns', 'maxRow 8 maxCol 6' in out)
@@ -44,8 +44,8 @@ check('existing sheet: asks to replace', 'already exists. Replace it?' in a.plai
 a.key(0x1B); a.run()
 a.key('X', oa=True); a.run(); a.key(0x18); a.key('GAMES\r'); a.run()
 check('refuses to write over the database', 'is not a Mouse Calc sheet' in a.plain())
-a.key('\r'); a.run(); a.key(0x18); a.key('MOUSEDB.LAST\r'); a.run()
-check("refuses MouseDB's own names", 'is not a Mouse Calc sheet' in a.plain())
+a.key('\r'); a.run(); a.key(0x18); a.key('RETRODB.LAST\r'); a.run()
+check("refuses RetroDB's own names", 'is not a Mouse Calc sheet' in a.plain())
 a.key('\r'); a.run(); a.key(0x1B); a.run()
 # export only the selected records
 a.key('L', oa=True); a.run(); a.key('\tbrod\r'); a.run()

@@ -1,37 +1,37 @@
-# MouseDB Owner's Manual
+# RetroDB Owner's Manual
 
 Oct 28, 2026 · @Jonathan Adar
 
-## MouseDB 1.1
+## RetroDB 1.1
 
 **A forms database for the Apple IIe, IIc and IIgs**
 
 by 6502Retro
 
-&#91;image: The MouseDB title screen\]
+&#91;image: The RetroDB title screen\]
 
 ### Notice
 
-MouseDB is new software written for this release. It was modeled on the way PFS:File (Software Publishing Corporation, 1982) organizes information into forms, but it contains no code or text from that program, and it is not affiliated with Software Publishing Corporation. Mouse Calc is a product of Version Soft. Apple, Apple IIe, Apple IIc, Apple IIGS and ProDOS are trademarks of Apple Inc.
+RetroDB is new software written for this release. It was modeled on the way PFS:File (Software Publishing Corporation, 1982) organizes information into forms, but it contains no code or text from that program, and it is not affiliated with Software Publishing Corporation. Mouse Calc is a product of Version Soft. Apple, Apple IIe, Apple IIc, Apple IIGS and ProDOS are trademarks of Apple Inc.
 
-MouseDB is provided as is, without warranty of any kind. Keep backup copies of your disks and your databases. See the LICENSE file on the source disk for the terms under which MouseDB may be copied and shared.
+RetroDB is provided as is, without warranty of any kind. Keep backup copies of your disks and your databases. See the LICENSE file on the source disk for the terms under which RetroDB may be copied and shared.
 
 ## Preface: About This Manual
 
-MouseDB keeps any kind of list you can describe with a form: an address book, a record collection, a parts list, a software library. You design the form once, fill in one form for each thing you want to keep track of, and MouseDB finds, sorts, totals and reports on them for you.
+RetroDB keeps any kind of list you can describe with a form: an address book, a record collection, a parts list, a software library. You design the form once, fill in one form for each thing you want to keep track of, and RetroDB finds, sorts, totals and reports on them for you.
 
-If you have used RetroInv or Mouse Calc, MouseDB will feel familiar at once. It uses the same pull-down menus, the same mouse and keyboard commands, the same dialog boxes and the same way of saving your work. It also trades sheets with Mouse Calc in both directions.
+If you have used RetroInv or Mouse Calc, RetroDB will feel familiar at once. It uses the same pull-down menus, the same mouse and keyboard commands, the same dialog boxes and the same way of saving your work. It also trades sheets with Mouse Calc in both directions.
 
 ### How this manual is organized
 
-- **Chapter 1, Getting Started**, tells you what you need and how to start MouseDB.
+- **Chapter 1, Getting Started**, tells you what you need and how to start RetroDB.
 - **Chapter 2, A Guided Tour**, shows you the main screen and how to use the menus, the mouse and the keyboard.
 - **Chapter 3, Designing a Form**, explains fields and how to set up or change a form.
 - **Chapter 4, Working With Records**, covers adding, changing, finding and removing records.
 - **Chapter 5, Selecting and Sorting**, shows how to see just the records you want, in the order you want.
 - **Chapter 6, Reports**, explains the group-and-total report.
 - **Chapter 7, Saving and Keeping More Than One Database**, covers Save, Save As, Open and Revert to Saved.
-- **Chapter 8, MouseDB and Mouse Calc**, explains exporting and importing sheets.
+- **Chapter 8, RetroDB and Mouse Calc**, explains exporting and importing sheets.
 - **Chapter 9, Records Inside Records**, shows how to keep track of what is inside what: cards in a computer, a drive on its card, things in a box on a shelf.
 - **The appendixes** summarize every command and message, give technical details, and help when something goes wrong.
 
@@ -48,16 +48,16 @@ If you have used RetroInv or Mouse Calc, MouseDB will feel familiar at once. It 
 
 ## Chapter 1: Getting Started
 
-MouseDB runs on an enhanced Apple IIe with an 80-column card, an Apple IIc or IIc Plus, or an Apple IIGS, under ProDOS 8.
+RetroDB runs on an enhanced Apple IIe with an 80-column card, an Apple IIc or IIc Plus, or an Apple IIGS, under ProDOS 8.
 
 ### What you need
 
 | Item | Needed? | Notes |
 | --- | --- | --- |
-| Enhanced Apple IIe, IIc or IIGS | Yes | MouseDB uses MouseText and the 80-column screen. An unenhanced IIe shows NEEDS ENHANCED IIE/IIC/IIGS and stops. |
+| Enhanced Apple IIe, IIc or IIGS | Yes | RetroDB uses MouseText and the 80-column screen. An unenhanced IIe shows NEEDS ENHANCED IIE/IIC/IIGS and stops. |
 | 128K of memory | Recommended | With 128K, records are kept in the auxiliary 64K and up to 250 fit. With 64K, records share main memory and far fewer fit. |
 | A mouse | No | AppleMouse II card on the IIe, the built-in port on the IIc and IIGS. Every command also works from the keyboard. |
-| The MouseDB disk | Yes | A 140K ProDOS disk (MOUSEDB-1.1.po). It can also be copied to a hard disk or a 3.5-inch disk. |
+| The RetroDB disk | Yes | A 140K ProDOS disk (RETRODB-1.1.po). It can also be copied to a hard disk or a 3.5-inch disk. |
 | Mouse Calc | No | Only needed to work with exported sheets. |
 
 ### What's on the disk
@@ -65,42 +65,42 @@ MouseDB runs on an enhanced Apple IIe with an 80-column card, an Apple IIc or II
 | File | What it is |
 | --- | --- |
 | PRODOS | ProDOS 8, version 2.4.3 |
-| MOUSEDB.SYSTEM | The MouseDB program |
+| RETRODB.SYSTEM | The RetroDB program |
 | BASIC.SYSTEM | Applesoft BASIC, for your own programs |
 | ADDRESSES, COLLECTION, SOFTWARE | Three sample databases to explore. COLLECTION shows records inside other records (Chapter 9). |
 | COLLECT.MC | A Mouse Calc sheet exported from COLLECTION, for trying Import |
-| MOUSEDB.LAST | Remembers which database to open when MouseDB starts |
+| RETRODB.LAST | Remembers which database to open when RetroDB starts |
 
 ### Make a backup copy first
 
-Before you use MouseDB, copy the disk with the Apple System Utilities, Copy II Plus, or any ProDOS disk copier. Put the original away and work with the copy.
+Before you use RetroDB, copy the disk with the Apple System Utilities, Copy II Plus, or any ProDOS disk copier. Put the original away and work with the copy.
 
-> **Important!** MouseDB saves your databases on the same disk and in the same folder as MOUSEDB.SYSTEM, so the disk you start from must not be write-protected.
+> **Important!** RetroDB saves your databases on the same disk and in the same folder as RETRODB.SYSTEM, so the disk you start from must not be write-protected.
 
-### Starting MouseDB
+### Starting RetroDB
 
-1. Put the MouseDB disk in the startup drive and turn on the Apple, or press Control-Open-Apple-RESET to restart it.
-2. ProDOS starts MOUSEDB.SYSTEM by itself, and the title screen appears.
+1. Put the RetroDB disk in the startup drive and turn on the Apple, or press Control-Open-Apple-RESET to restart it.
+2. ProDOS starts RETRODB.SYSTEM by itself, and the title screen appears.
 3. Press any key or click the mouse button.
 
-From a program selector or ProDOS launcher, such as Bitsy Bye, choose MOUSEDB.SYSTEM instead. If you copied MouseDB to a hard disk, keep MOUSEDB.SYSTEM and your databases together in one folder.
+From a program selector or ProDOS launcher, such as Bitsy Bye, choose RETRODB.SYSTEM instead. If you copied RetroDB to a hard disk, keep RETRODB.SYSTEM and your databases together in one folder.
 
 &#91;image: Figure 1-1: The title screen\]
 
-After the title screen, MouseDB opens the database you used last. The first time you start it, that is the ADDRESSES sample.
+After the title screen, RetroDB opens the database you used last. The first time you start it, that is the ADDRESSES sample.
 
-### MouseDB and /RAM
+### RetroDB and /RAM
 
-On a 128K Apple, ProDOS sets up the auxiliary 64K as a small disk called /RAM. MouseDB needs that memory for records, so:
+On a 128K Apple, ProDOS sets up the auxiliary 64K as a small disk called /RAM. RetroDB needs that memory for records, so:
 
-- If /RAM is empty, MouseDB borrows it while it runs. When you quit, MouseDB puts /RAM back and formats it again, empty, so it is ready for other programs.
-- If /RAM has files on it, MouseDB leaves them alone and keeps records in main memory only. It tells you so when it starts, and fewer records fit.
+- If /RAM is empty, RetroDB borrows it while it runs. When you quit, RetroDB puts /RAM back and formats it again, empty, so it is ready for other programs.
+- If /RAM has files on it, RetroDB leaves them alone and keeps records in main memory only. It tells you so when it starts, and fewer records fit.
 
-> **By the Way:** To have room for 250 records, copy anything you want to keep out of /RAM before you start MouseDB.
+> **By the Way:** To have room for 250 records, copy anything you want to keep out of /RAM before you start RetroDB.
 
 ## Chapter 2: A Guided Tour
 
-Everything in MouseDB starts from one screen: a list of your records, with the menu bar above it and the status line below.
+Everything in RetroDB starts from one screen: a list of your records, with the menu bar above it and the status line below.
 
 &#91;image: Figure 2-1: The main screen, showing the COLLECTION sample with what is inside what\]
 
@@ -139,7 +139,7 @@ A command whose name ends in three dots (…) opens a dialog box where you can s
 
 | Menu | Commands |
 | --- | --- |
-| Apple | About MouseDB |
+| Apple | About RetroDB |
 | File | New Database, Open, Save, Save As, Revert to Saved, Design Form, Import from Mouse Calc, Export to Mouse Calc, Quit |
 | Record | New Record, Edit Record, Duplicate Record, Delete Record, Delete Selected, Find, Find Next |
 | Sort | By (each field of the form), in the order the fields appear on the form |
@@ -147,13 +147,13 @@ A command whose name ends in three dots (…) opens a dialog box where you can s
 
 ### Dialog boxes
 
-Dialog boxes work the same way throughout MouseDB:
+Dialog boxes work the same way throughout RetroDB:
 
 - TAB moves from one box or button to the next. UP ARROW and DOWN ARROW also move between boxes.
 - RETURN chooses the default button, the one shown in inverse.
 - ESC is always the same as Cancel.
 - With the mouse, click a box to type in it and click a button to choose it.
-- In a text box, CONTROL-X clears what's there, and DELETE or LEFT ARROW erases the character to the left. The quotation mark (") can't be typed, because MouseDB uses it in its files.
+- In a text box, CONTROL-X clears what's there, and DELETE or LEFT ARROW erases the character to the left. The quotation mark (") can't be typed, because RetroDB uses it in its files.
 
 ## Chapter 3: Designing a Form
 
@@ -161,7 +161,7 @@ A form is the list of blanks you fill in for each record, such as Name, Phone an
 
 ### Starting a new database
 
-Choose New Database from the File menu. If the open database has unsaved changes, MouseDB first asks whether to save them. The new database is called Untitled, and the Design Form window opens so you can set up its fields.
+Choose New Database from the File menu. If the open database has unsaved changes, RetroDB first asks whether to save them. The new database is called Untitled, and the Design Form window opens so you can set up its fields.
 
 &#91;image: Figure 3-1: The Design Form window\]
 
@@ -187,7 +187,7 @@ After the last column, TAB takes you to the next row. A blank row is always wait
 | Money | Amounts from -$9,999,999.99 to $9,999,999.99 | `12.5`, `$1,250.00` | 4 |
 | Date | A date from the year 1000 to 2999, or part of one | `1985-03-21`, `3/21/1985`, `03/1985`, `1985` | 11 |
 | Yes/No | Yes, No, or blank | Choose with LEFT ARROW and RIGHT ARROW | 1 |
-| No. | A record number from 1 to 999, given by MouseDB | Nothing: MouseDB fills it in | 2 |
+| No. | A record number from 1 to 999, given by RetroDB | Nothing: RetroDB fills it in | 2 |
 | Part Of | The No. of the record this one is inside | A No., or choose with LEFT ARROW and RIGHT ARROW | 2 |
 
 Dates are always shown as YYYY-MM-DD, so they sort correctly. A date can be just a year (`1985`) or a year and month (`1985-03`) when that's all you know.
@@ -206,7 +206,7 @@ When the form is the way you want it, click OK or press RETURN. Press ESC or cli
 
 You can choose Design Form again at any time, even when the database is full of records. You can rename fields, change their types and lengths, add and delete fields, and change which ones are in the list.
 
-If the database already has records, MouseDB warns you before it changes them:
+If the database already has records, RetroDB warns you before it changes them:
 
 - A field you deleted loses its data in every record.
 - A shorter Text field cuts off text that no longer fits.
@@ -215,7 +215,7 @@ If the database already has records, MouseDB warns you before it changes them:
 
 > **Important!** Changing the type or length of a field can't be undone once you click Change in the warning. If you change your mind, choose Revert to Saved from the File menu to go back to the database as it was last saved.
 
-If the new form makes each record longer, fewer records may fit in memory. When the records you have would no longer fit, MouseDB tells you how many would, and doesn't change the form.
+If the new form makes each record longer, fewer records may fit in memory. When the records you have would no longer fit, RetroDB tells you how many would, and doesn't change the form.
 
 ## Chapter 4: Working With Records
 
@@ -223,7 +223,7 @@ A record is one filled-in form. A database holds up to 250 records on a 128K App
 
 ### Adding a record
 
-Choose New Record from the Record menu, or press Open-Apple-N. The record window opens with every field blank. A No. field shows (new) until you click OK; then MouseDB gives the record its number.
+Choose New Record from the Record menu, or press Open-Apple-N. The record window opens with every field blank. A No. field shows (new) until you click OK; then RetroDB gives the record its number.
 
 &#91;image: Figure 4-1: The record window, showing that the Disk II Drive is part of the Disk II Controller\]
 
@@ -234,7 +234,7 @@ Choose New Record from the Record menu, or press Open-Apple-N. The record window
 
 The new record goes at the end of the list and is selected, so you can see it. If you've sorted the list, choose the sort again to put it in its place.
 
-MouseDB checks each field when you click OK. If a Number, Money or Date field holds something it can't use, a message says which field and what to type, and you go back to that field. A record with every field blank isn't added.
+RetroDB checks each field when you click OK. If a Number, Money or Date field holds something it can't use, a message says which field and what to type, and you go back to that field. A record with every field blank isn't added.
 
 > **By the Way:** You can leave any field blank. Blank Number and Money fields are left out of totals and averages.
 
@@ -248,16 +248,16 @@ When a new record is much like one you already have, select that one and choose 
 
 ### Deleting records
 
-- **Delete Record** (Open-Apple-D) removes the selected record. MouseDB shows the record's name and asks you to confirm. If other records are inside it, MouseDB says how many (Chapter 9).
+- **Delete Record** (Open-Apple-D) removes the selected record. RetroDB shows the record's name and asks you to confirm. If other records are inside it, RetroDB says how many (Chapter 9).
 - **Delete Selected** removes every record in the list. When you've selected records (Chapter 5) it deletes just those, after asking `Delete the 4 selected records?`; otherwise it asks whether to delete all of them.
 
 > **Important!** Deleted records are gone from memory at once. If you delete something by mistake, choose Revert to Saved before you save, to go back to the copy on disk.
 
 ### Finding a record
 
-Choose Find (Open-Apple-F) and type a word or part of one, such as `mouse`. MouseDB looks in every field of the records in the list, starting after the selected record, and selects the first one that contains it. Capitals don't matter.
+Choose Find (Open-Apple-F) and type a word or part of one, such as `mouse`. RetroDB looks in every field of the records in the list, starting after the selected record, and selects the first one that contains it. Capitals don't matter.
 
-Choose Find Next (Open-Apple-G) to go on to the next record that matches. The search wraps around to the top of the list. If nothing matches, MouseDB says `No record matches that text.`
+Choose Find Next (Open-Apple-G) to go on to the next record that matches. The search wraps around to the top of the list. If nothing matches, RetroDB says `No record matches that text.`
 
 ### When the database is full
 
@@ -325,7 +325,7 @@ Two choices at the top of the report window decide what it shows. Press TAB (or 
 | Group by | Any field, or (none) | Makes one line for each different value of the field, in alphabetical order |
 | Total of | Any Number or Money field, or (none) | Adds up that field for each group and for the whole report |
 
-When you first open the report, MouseDB picks a likely grouping for you: the Part Of field if the form has one, otherwise the first short Text field after the first field (such as Maker or State), or else a Yes/No field.
+When you first open the report, RetroDB picks a likely grouping for you: the Part Of field if the form has one, otherwise the first short Text field after the first field (such as Maker or State), or else a Yes/No field.
 
 ### Reading the report
 
@@ -342,37 +342,37 @@ When records are selected (Chapter 5), the window is titled Report on the Select
 
 ## Chapter 7: Saving and Keeping More Than One Database
 
-MouseDB works on the database in memory. Your changes are kept only when you save, and "Modified" on the status line reminds you when there is something to save.
+RetroDB works on the database in memory. Your changes are kept only when you save, and "Modified" on the status line reminds you when there is something to save.
 
 ### Saving
 
-Choose Save from the File menu, or press Open-Apple-S. The database is written to the disk under its own name, in the same folder as MOUSEDB.SYSTEM.
+Choose Save from the File menu, or press Open-Apple-S. The database is written to the disk under its own name, in the same folder as RETRODB.SYSTEM.
 
 An Untitled database has no name yet, so Save asks for one, just as Save As does.
 
-> **By the Way:** MouseDB saves safely. It writes the whole database to a temporary file called MOUSEDB.SAVING first, and only replaces the old file once the new one is complete. If the disk fills up or something goes wrong, the message says the file on disk was not changed.
+> **By the Way:** RetroDB saves safely. It writes the whole database to a temporary file called RETRODB.SAVING first, and only replaces the old file once the new one is complete. If the disk fills up or something goes wrong, the message says the file on disk was not changed.
 
 ### Save As
 
 Save As saves the database under a new name, leaving the old file as it was. Type a name and click Save.
 
 - A name starts with a letter and has up to 15 letters, digits and periods, such as `RECORDS` or `ADDR.1987`. These are the ProDOS rules for file names.
-- If a database with that name already exists, MouseDB asks whether to replace it.
-- MouseDB won't use the name of a file that isn't a database, or its own files MOUSEDB.SYSTEM, MOUSEDB.LAST and MOUSEDB.SAVING.
+- If a database with that name already exists, RetroDB asks whether to replace it.
+- RetroDB won't use the name of a file that isn't a database, or its own files RETRODB.SYSTEM, RETRODB.LAST and RETRODB.SAVING.
 
 After Save As, the new name appears in the menu bar and is the database you're working on.
 
 ### Opening another database
 
-Choose Open from the File menu, or press Open-Apple-O. The dialog lists the databases in the MouseDB folder. Highlight one with the arrow keys or the mouse and click Open, or click it a second time.
+Choose Open from the File menu, or press Open-Apple-O. The dialog lists the databases in the RetroDB folder. Highlight one with the arrow keys or the mouse and click Open, or click it a second time.
 
 &#91;image: Figure 7-1: The Open Database dialog\]
 
-The list shows only MouseDB databases, never other files. It has room for 14; when the folder holds more, the dialog says that only the first 14 are listed.
+The list shows only RetroDB databases, never other files. It has room for 14; when the folder holds more, the dialog says that only the first 14 are listed.
 
-If the database you're leaving has unsaved changes, MouseDB asks first:
+If the database you're leaving has unsaved changes, RetroDB asks first:
 
-&#91;image: Figure 7-2: MouseDB asks before closing a changed database\]
+&#91;image: Figure 7-2: RetroDB asks before closing a changed database\]
 
 - **Save** saves the changes, then goes on.
 - **Don't Save** throws the changes away and goes on.
@@ -382,31 +382,31 @@ New Database, Open and Quit all ask this question.
 
 ### Revert to Saved
 
-Revert to Saved throws away every change since you last saved and reads the database from the disk again. MouseDB asks you to confirm first.
+Revert to Saved throws away every change since you last saved and reads the database from the disk again. RetroDB asks you to confirm first.
 
-### MOUSEDB.LAST
+### RETRODB.LAST
 
-Each time you open or save a database, MouseDB writes its name in a small file called MOUSEDB.LAST. The next time you start MouseDB, it opens that database for you. If the file is missing, MouseDB starts with an empty Untitled database.
+Each time you open or save a database, RetroDB writes its name in a small file called RETRODB.LAST. The next time you start RetroDB, it opens that database for you. If the file is missing, RetroDB starts with an empty Untitled database.
 
 ### Quitting
 
-Choose Quit from the File menu, or press Open-Apple-Q. After asking about unsaved changes, MouseDB puts /RAM back if it borrowed it and returns to the ProDOS program selector.
+Choose Quit from the File menu, or press Open-Apple-Q. After asking about unsaved changes, RetroDB puts /RAM back if it borrowed it and returns to the ProDOS program selector.
 
 > **Important!** Turning off the Apple or pressing RESET without quitting loses your unsaved changes, and leaves /RAM unavailable until the Apple is restarted.
 
-## Chapter 8: MouseDB and Mouse Calc
+## Chapter 8: RetroDB and Mouse Calc
 
-MouseDB reads and writes Mouse Calc 1.1 sheets directly, so you can move records into a spreadsheet to chart and figure with them, and bring rows from a sheet back in as records. It works the same way as in RetroInv.
+RetroDB reads and writes Mouse Calc 1.1 sheets directly, so you can move records into a spreadsheet to chart and figure with them, and bring rows from a sheet back in as records. It works the same way as in RetroInv.
 
 ### Exporting to Mouse Calc
 
 1. Arrange the list the way you want the sheet: select records (Chapter 5) to export only some of them, and sort it to set the order of the rows.
 2. Choose Export to Mouse Calc from the File menu, or press Open-Apple-X.
-3. MouseDB suggests a name made from the database's name and `.MC`, such as `COLLECTION.MC`. Change it if you like, then click Export.
+3. RetroDB suggests a name made from the database's name and `.MC`, such as `COLLECTION.MC`. Change it if you like, then click Export.
 
 &#91;image: Figure 8-1: Exporting the COLLECTION database\]
 
-The sheet is saved in the MouseDB folder, and a message tells you how many records went into it and its full path name. If a Mouse Calc sheet with that name is already there, MouseDB asks before replacing it; it won't replace a file that isn't a sheet.
+The sheet is saved in the RetroDB folder, and a message tells you how many records went into it and its full path name. If a Mouse Calc sheet with that name is already there, RetroDB asks before replacing it; it won't replace a file that isn't a sheet.
 
 ### What the sheet looks like
 
@@ -425,11 +425,11 @@ Because the totals are real formulas, they update when you change the numbers in
 
 ### Importing from Mouse Calc
 
-Choose Import from Mouse Calc from the File menu, or press Open-Apple-I. The dialog lists the Mouse Calc sheets in the MouseDB folder. Pick one and click Import.
+Choose Import from Mouse Calc from the File menu, or press Open-Apple-I. The dialog lists the Mouse Calc sheets in the RetroDB folder. Pick one and click Import.
 
 &#91;image: Figure 8-2: Choosing a sheet to import\]
 
-MouseDB reads row 1 of the sheet as headings and matches each one with a field of the form. The match ignores capitals, spaces and punctuation, so `Item Name` matches a field called ITEMNAME. Columns whose heading matches no field are skipped.
+RetroDB reads row 1 of the sheet as headings and matches each one with a field of the form. The match ignores capitals, spaces and punctuation, so `Item Name` matches a field called ITEMNAME. Columns whose heading matches no field are skipped.
 
 It then asks what to do with the rows:
 
@@ -443,7 +443,7 @@ Each cell is changed into the type of its field, just as if you had typed it. A 
 
 ### Making a database from a sheet
 
-You can turn any Mouse Calc sheet into a new database. Choose New Database, click Cancel in the Design Form window, and then choose Import from Mouse Calc. Because the new database has no form, MouseDB offers to **Create** one from the sheet:
+You can turn any Mouse Calc sheet into a new database. Choose New Database, click Cancel in the Design Form window, and then choose Import from Mouse Calc. Because the new database has no form, RetroDB offers to **Create** one from the sheet:
 
 - Each heading in row 1 becomes a field (up to 16), all of them in the list. Columns headed No. and Part Of become fields of those types (Chapter 9).
 - A column of plain numbers becomes a Number field; numbers shown as dollars, or with cents, make a Money field.
@@ -452,11 +452,11 @@ You can turn any Mouse Calc sheet into a new database. Choose New Database, clic
 
 Afterward, choose Design Form to rename fields, adjust lengths, or take fields out of the list, then save the new database with Save As.
 
-> **By the Way:** If a sheet has more rows than fit in memory, MouseDB imports as many as fit and tells you that some rows did not fit.
+> **By the Way:** If a sheet has more rows than fit in memory, RetroDB imports as many as fit and tells you that some rows did not fit.
 
 ## Chapter 9: Records Inside Records
 
-MouseDB 1.1 can keep track of what is inside what: the cards in a computer, the drive on its controller card, the box on a shelf in the closet and everything in the box. Any record can be inside another record, to any depth.
+RetroDB 1.1 can keep track of what is inside what: the cards in a computer, the drive on its controller card, the box on a shelf in the closet and everything in the box. Any record can be inside another record, to any depth.
 
 The COLLECTION sample works this way. Open it to follow along.
 
@@ -466,14 +466,14 @@ Two field types make this work. You add them in Design Form like any other field
 
 | Type | What it holds |
 | --- | --- |
-| No. | A number from 1 to 999 that MouseDB gives each record. A record keeps its No. for good, however you sort, change or delete other records. You can't type in a No. field. |
+| No. | A number from 1 to 999 that RetroDB gives each record. A record keeps its No. for good, however you sort, change or delete other records. You can't type in a No. field. |
 | Part Of | The No. of the record this one is inside, or nothing when it isn't inside anything. In the list it shows that record's name. |
 
 A form can have one No. field and one Part Of field. A Part Of field needs a No. field, because it refers to records by their numbers.
 
-When you add a No. field to a database that already has records, MouseDB numbers them 1, 2, 3 and so on, in the order of the list. A new record gets the next number, and Duplicate Record gives the copy a number of its own. Once No. 999 has been used, MouseDB uses the smallest number that is free.
+When you add a No. field to a database that already has records, RetroDB numbers them 1, 2, 3 and so on, in the order of the list. A new record gets the next number, and Duplicate Record gives the copy a number of its own. Once No. 999 has been used, RetroDB uses the smallest number that is free.
 
-> **By the Way:** A record's name is its first Text field, such as Item or Name. MouseDB uses it wherever it shows a record that another one is part of.
+> **By the Way:** A record's name is its first Text field, such as Item or Name. RetroDB uses it wherever it shows a record that another one is part of.
 
 ### Putting a record inside another
 
@@ -483,7 +483,7 @@ Open the record and move to its Part Of field.
 - Or type the No. of the record it belongs in, such as `5`.
 - Press CONTROL-X when it isn't inside anything.
 
-When you click OK, MouseDB checks the Part Of field. It won't accept a No. that no record has, and it won't let a record be part of itself or of a record that is inside it, since that would make a loop.
+When you click OK, RetroDB checks the Part Of field. It won't accept a No. that no record has, and it won't let a record be part of itself or of a record that is inside it, since that would make a loop.
 
 ### The list as a tree
 
@@ -493,7 +493,7 @@ Choose By Part Of from the Sort menu to see the database as a tree. Each record 
 
 - To move a record, change its Part Of. Everything inside it moves along with it.
 - To take a record out of its container, clear its Part Of with CONTROL-X.
-- When you delete a record that holds others, MouseDB tells you how many. They stay in the database but are no longer part of anything; whatever is inside them stays inside them.
+- When you delete a record that holds others, RetroDB tells you how many. They stay in the database but are no longer part of anything; whatever is inside them stays inside them.
 
 ### Finding, selecting and reporting
 
@@ -507,9 +507,9 @@ Choose By Part Of from the Sort menu to see the database as a tree. Each record 
 - **Export** writes No. and Part Of as plain numbers, so the sheet keeps the links.
 - **Import with Replace** keeps the numbers from the sheet.
 - **Import with Add** moves the sheet's numbers past the largest No. already in use. The new records keep their links to each other, and any repeated number is replaced with a free one.
-- **Create** makes columns headed No. and Part Of into fields of those types, so a database exported from MouseDB comes back with its tree.
+- **Create** makes columns headed No. and Part Of into fields of those types, so a database exported from RetroDB comes back with its tree.
 
-> **Important!** MouseDB 1.0 can't open a database that has a No. or Part Of field. Use MouseDB 1.1 or later for those databases.
+> **Important!** RetroDB 1.0 can't open a database that has a No. or Part Of field. Use RetroDB 1.1 or later for those databases.
 
 ## Appendix A: Command Summary
 
@@ -519,16 +519,16 @@ Open-Apple commands work from the main screen. Solid-Apple (Option on the IIGS) 
 
 | Menu | Command | Keys | What it does |
 | --- | --- | --- | --- |
-| Apple | About MouseDB | Open-Apple-? | Shows the version and credits |
+| Apple | About RetroDB | Open-Apple-? | Shows the version and credits |
 | File | New Database… |  | Starts an empty Untitled database and opens Design Form |
-| File | Open… | Open-Apple-O | Opens another database in the MouseDB folder |
+| File | Open… | Open-Apple-O | Opens another database in the RetroDB folder |
 | File | Save | Open-Apple-S | Saves the database (asks for a name if Untitled) |
 | File | Save As… |  | Saves under a new name |
 | File | Revert to Saved |  | Reloads the database from the disk |
 | File | Design Form… |  | Sets up or changes the fields |
 | File | Import from Mouse Calc… | Open-Apple-I | Reads rows from a Mouse Calc sheet |
 | File | Export to Mouse Calc… | Open-Apple-X | Writes the list as a Mouse Calc sheet |
-| File | Quit | Open-Apple-Q | Leaves MouseDB |
+| File | Quit | Open-Apple-Q | Leaves RetroDB |
 | Record | New Record… | Open-Apple-N | Adds a record |
 | Record | Edit Record… | Open-Apple-E or RETURN | Changes the selected record |
 | Record | Duplicate Record… | Open-Apple-C | Adds a copy of the selected record |
@@ -578,7 +578,7 @@ Messages are listed alphabetically by their first words. The messages about No. 
 | Delete the 4 selected records? / Delete all 14 records? | You chose Delete Selected. | Click Delete, or Cancel. This can't be undone except by Revert to Saved. |
 | Discard your changes and reload the database from disk? | You chose Revert to Saved. | Click Revert, or Cancel. |
 | Import the sheet's rows into this database? | The database has a form but no records yet. | Click Import, or Cancel. |
-| It isn't a MouseDB database. | The file chosen isn't in MouseDB's format. | Choose another file. |
+| It isn't a RetroDB database. | The file chosen isn't in RetroDB's format. | Choose another file. |
 | Make a new database from this sheet? | You're importing into a database with no form. | Click Create to make fields from the sheet's headings (Chapter 8). |
 | No record matches that text. | Find or Find Next found nothing. | Check the spelling, or choose Show All Records if only some records are showing. |
 | No records match. | No record fits the Select Records criteria. | Change the criteria, or choose Show All Records. |
@@ -594,13 +594,13 @@ Messages are listed alphabetically by their first words. The messages about No. 
 | The number in (field) is too large. | It is beyond the field's range. | The largest Number is 999,999,999 and the largest amount $9,999,999.99. |
 | The record is longer than 255 bytes. | The fields of the form add up to more than 255 bytes. | Make some Text fields shorter. |
 | There are no databases in this folder yet. | Open found no databases. | Choose New Database. |
-| There are no Mouse Calc sheets in this folder. | Import found no sheets. | Copy a sheet into the MouseDB folder. |
+| There are no Mouse Calc sheets in this folder. | Import found no sheets. | Copy a sheet into the RetroDB folder. |
 | This changes all (n) records. | You changed the form of a database with records. | Click Change to go ahead, or Cancel (Chapter 3). |
 | This database has more records than fit… | The file holds more records than memory has room for. Only the first ones were loaded. | It opens as Untitled so the file isn't shortened. Free /RAM, or save part of it under a new name. |
 | This file doesn't hold the number of records it says… | The file may be damaged. | It opens as Untitled; check the records and save under a new name. |
 | Two fields have the same name. | Field names must differ. | Rename one of them. |
 | With this form only (n) records fit in memory | The new form makes records too long for the records you have. | Make fields shorter, or delete records first. |
-| /RAM has files on it… | MouseDB is keeping records in main memory only. | Quit, copy the files off /RAM, and start MouseDB again for room for 250 records. |
+| /RAM has files on it… | RetroDB is keeping records in main memory only. | Quit, copy the files off /RAM, and start RetroDB again for room for 250 records. |
 | A form can have only one field of type No. / of type Part Of. | Design Form found two No. fields or two Part Of fields. | Change the type of one of them. |
 | A Part Of field holds the No. of another record, so the form needs a field of type No. as well. | The form has Part Of but no No. | Add a No. field, or change Part Of to another type. |
 | A record can't be part of itself, or of a record that is inside it. | The Part Of you chose would make a loop. | Choose another record, or press CONTROL-X. |
@@ -640,14 +640,14 @@ Messages are listed alphabetically by their first words. The messages about No. 
 
 ### Memory
 
-MOUSEDB.SYSTEM loads at $2000, where its Mouse Calc and file-list code stays. While the title screen is up, MouseDB puts that code aside in auxiliary memory and unpacks the title picture in its place; afterwards the memory that held the packed picture holds the No. tables and records. Records live in the auxiliary 64K from $0800 to $BFFF, reached with the AUXMOVE routine, with leftover room in main memory used too. When /RAM is empty, MouseDB disconnects it as Apple's ProDOS Technical Note #10 describes, and reconnects and formats it on Quit.
+RETRODB.SYSTEM loads at $2000, where its Mouse Calc and file-list code stays. While the title screen is up, RetroDB puts that code aside in auxiliary memory and unpacks the title picture in its place; afterwards the memory that held the packed picture holds the No. tables and records. Records live in the auxiliary 64K from $0800 to $BFFF, reached with the AUXMOVE routine, with leftover room in main memory used too. When /RAM is empty, RetroDB disconnects it as Apple's ProDOS Technical Note #10 describes, and reconnects and formats it on Quit.
 
 ### The database file
 
 A database is a ProDOS text file (type TXT, $04), one item per line ending in a carriage return, so it can be read by Applesoft or any text editor:
 
 ```
-MOUSEDB1
+RETRODB1
 3
 "Name",1,24,1
 "Phone",1,12,1
@@ -661,22 +661,22 @@ MOUSEDB1
 ""
 ```
 
-- Line 1 is `MOUSEDB1`, and line 2 the number of fields.
+- Line 1 is `RETRODB1`, and line 2 the number of fields.
 - Each field is a line of name, type (1 Text, 2 Number, 3 Money, 4 Date, 5 Yes/No, 6 No., 7 Part Of), length (for Text, the length you chose; for other types, the width of the column) and In list (1 or 0).
 - Then comes the number of records, and each record as one quoted line per field. Numbers are written plainly (`1985`, `-5`), Money with two decimals (`125.50`), dates as YYYY-MM-DD, and Yes/No as `Yes`, `No` or empty. No. and Part Of are written as numbers, and empty when blank.
 
 ### Mouse Calc sheets
 
-Mouse Calc sheets are ProDOS files of type $F8. MouseDB writes Mouse Calc 1.1's 2,179-byte program header, followed by the cells column by column: text cells, number cells in Mouse Calc's decimal format, and SUM formulas with their values already worked out. On import, MouseDB reads text cells, numbers and the cached values of formulas.
+Mouse Calc sheets are ProDOS files of type $F8. RetroDB writes Mouse Calc 1.1's 2,179-byte program header, followed by the cells column by column: text cells, number cells in Mouse Calc's decimal format, and SUM formulas with their values already worked out. On import, RetroDB reads text cells, numbers and the cached values of formulas.
 
-### Files MouseDB uses
+### Files RetroDB uses
 
 | File | Purpose |
 | --- | --- |
-| MOUSEDB.SYSTEM | The program |
-| MOUSEDB.LAST | The name of the last database used |
-| MOUSEDB.SAVING | A temporary file during Save; it is renamed when the save is complete |
-| Your databases | TXT files beginning with MOUSEDB1 |
+| RETRODB.SYSTEM | The program |
+| RETRODB.LAST | The name of the last database used |
+| RETRODB.SAVING | A temporary file during Save; it is renamed when the save is complete |
+| Your databases | TXT files beginning with RETRODB1 |
 | Your sheets | $F8 Mouse Calc files |
 
 ## Appendix D: Troubleshooting
@@ -685,14 +685,14 @@ Mouse Calc sheets are ProDOS files of type $F8. MouseDB writes Mouse Calc 1.1's 
 | --- | --- | --- |
 | The screen says NEEDS ENHANCED IIE/IIC/IIGS. | The Apple IIe has the original ROMs. | Install the Enhancement Kit, or use a IIc or IIGS. |
 | The mouse doesn't move the pointer. | No mouse card was found, or the mouse is unplugged. | Use the keyboard; every command works without a mouse. Check the card and cable and restart. |
-| Only a few records fit, and MouseDB mentioned /RAM. | Files on /RAM stop MouseDB from using auxiliary memory. | Quit, copy the files elsewhere, and start MouseDB again. |
+| Only a few records fit, and RetroDB mentioned /RAM. | Files on /RAM stop RetroDB from using auxiliary memory. | Quit, copy the files elsewhere, and start RetroDB again. |
 | Save fails with "The disk is write-protected." | The startup disk is locked. | Use a copy that isn't write-protected. |
-| Save fails with "The disk is full." | No room for the database and its temporary copy. | Delete unneeded files, or copy MouseDB to a larger disk. |
-| A database isn't in the Open list. | It's in another folder, isn't a MouseDB file, or more than 14 are in the folder. | Copy it next to MOUSEDB.SYSTEM; move some databases to another folder. |
-| A Mouse Calc sheet isn't in the Import list. | It's in another folder, or isn't a $F8 Mouse Calc file. | Save it from Mouse Calc into the MouseDB folder. |
+| Save fails with "The disk is full." | No room for the database and its temporary copy. | Delete unneeded files, or copy RetroDB to a larger disk. |
+| A database isn't in the Open list. | It's in another folder, isn't a RetroDB file, or more than 14 are in the folder. | Copy it next to RETRODB.SYSTEM; move some databases to another folder. |
+| A Mouse Calc sheet isn't in the Import list. | It's in another folder, or isn't a $F8 Mouse Calc file. | Save it from Mouse Calc into the RetroDB folder. |
 | Import brought in blank columns. | The headings don't match the field names. | Rename the field or the heading so they match. |
 | A column I want doesn't show in the list. | It isn't marked In list, or the columns are wider than 80 characters. | In Design Form, mark it In list, shorten Text fields, or take other fields out of the list. |
-| MouseDB starts with Untitled instead of my database. | MOUSEDB.LAST is missing or names a file that isn't there. | Open your database; MouseDB will remember it from then on. |
+| RetroDB starts with Untitled instead of my database. | RETRODB.LAST is missing or names a file that isn't there. | Open your database; RetroDB will remember it from then on. |
 | Part Of shows a number with a question mark, such as No. 12? | No record has that No., for example after importing part of a sheet. | Open the record and choose the right one in Part Of, or clear it with CONTROL-X. |
 
 ## Glossary
@@ -705,11 +705,11 @@ Mouse Calc sheets are ProDOS files of type $F8. MouseDB writes Mouse Calc 1.1's 
 - **Import:** to read records in from another program's file.
 - **In list:** a field shown as a column of the main list.
 - **MouseText:** the set of small pictures, such as the apple and the arrows, that the enhanced Apple II can show in text.
-- **ProDOS:** the Apple II disk operating system that MouseDB runs under.
+- **ProDOS:** the Apple II disk operating system that RetroDB runs under.
 - **/RAM:** the RAM disk ProDOS makes from a 128K Apple's auxiliary memory.
 - **Record:** one filled-in form.
 - **Selection:** the records that match the Select Records criteria, shown in place of the whole database.
 - **Sheet:** a Mouse Calc spreadsheet file.
-- **No.:** a record number from 1 to 999 that MouseDB gives each record and never changes.
+- **No.:** a record number from 1 to 999 that RetroDB gives each record and never changes.
 - **Part Of:** a field that holds the No. of the record this one is inside.
 - **Tree order:** the list sorted By Part Of, with each record followed by the records inside it.

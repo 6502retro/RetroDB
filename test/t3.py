@@ -1,4 +1,4 @@
-# MouseDB: changing the form of a database full of records
+# RetroDB: changing the form of a database full of records
 import sys, random; sys.path.insert(0, 'test')
 from common import *
 V = 'test/v3'; fresh(V)
@@ -14,11 +14,11 @@ for i in range(245):
               '19%02d-%02d-%02d' % (random.randint(0, 99), random.randint(1, 12), random.randint(1, 28)),
               random.choice(['Yes', 'No', ''])])
 open(V + '/BIG', 'wb').write(dbfile('BIG', F, R))
-open(V + '/MOUSEDB.LAST', 'wb').write(b'BIG\r')
+open(V + '/RETRODB.LAST', 'wb').write(b'BIG\r')
 a = start(V)
 check('245 records loaded', '245 of 250 records' in rows(a, 22, 23))
 L = {}
-for line in open('build/mousedb.lbl'):
+for line in open('build/retrodb.lbl'):
     _, v, n = line.split(); L[n[1:]] = int(v, 16)
 bk = [a.main[L['PTRBK'] if 'PTRBK' in L else 0x0A00 + i] for i in range(200)]
 bk = list(a.main[0x0A00:0x0A00 + 245]); hi = list(a.main[0x0900:0x0900 + 245])
@@ -101,7 +101,7 @@ a.key('\r'); a.run(); a.key(0x1B); a.run()
 # editing the record in main memory, then drawing records in aux memory
 # (a smaller form, so that pool A holds the first record)
 F2 = F[:5] + [('More', 'Text', 12, 0)] + F[6:]
-fresh(V); open(V + '/BIG', 'wb').write(dbfile('BIG', F2, R[:20])); open(V + '/MOUSEDB.LAST', 'wb').write(b'BIG\r')
+fresh(V); open(V + '/BIG', 'wb').write(dbfile('BIG', F2, R[:20])); open(V + '/RETRODB.LAST', 'wb').write(b'BIG\r')
 a = start(V)
 check('record 0 is in main memory, record 1 in aux', a.main[0x0A00] == 0 and a.main[0x0A01] == 1)
 a.key('\r'); a.run(); a.key('\t\t'); a.key(0x18); a.key('8\r'); a.run()

@@ -7,7 +7,7 @@ def fresh(v, files=()):
     shutil.rmtree(v, ignore_errors=True); os.makedirs(v)
     for f in files: shutil.copy(f, v + '/' + os.path.basename(f))
 def start(vol='test/vol', **kw):
-    a = boot('build/MOUSEDB.SYSTEM', vol, **kw); a.run(); a.key(' '); a.run(); return a
+    a = boot('build/RETRODB.SYSTEM', vol, **kw); a.run(); a.key(' '); a.run(); return a
 def show(a):
     print(a.plain()); print('-' * 80)
 KINDS = {'Text': 1, 'Number': 2, 'Money': 3, 'Date': 4, 'Yes/No': 5, 'No.': 6, 'Part Of': 7}
@@ -40,8 +40,8 @@ def done():
     print('\n%d failed' % len(fails) + (': ' + '; '.join(fails) if fails else ''))
     sys.exit(1 if fails else 0)
 def dbfile(name, fields, records):
-    """write a MOUSEDB1 file: fields = [(name, kind, len, list)], records = [[str]]"""
-    out = ['MOUSEDB1', str(len(fields))]
+    """write a RETRODB1 file: fields = [(name, kind, len, list)], records = [[str]]"""
+    out = ['RETRODB1', str(len(fields))]
     for (n, k, l, s) in fields: out.append('"%s",%d,%d,%d' % (n, KINDS[k], l, s))
     out.append(str(len(records)))
     for r in records: out += ['"%s"' % v for v in r]

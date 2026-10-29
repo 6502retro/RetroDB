@@ -1,4 +1,4 @@
-"""Compress the title picture for MOUSEDB.SYSTEM: mklz.py IN OUT
+"""Compress the title picture for RETRODB.SYSTEM: mklz.py IN OUT
 
 Tokens: t < $80: t+1 literal bytes follow.  t >= $80: copy (t & $7F) + 3
 bytes from `offset` bytes back (a 2-byte offset follows, low byte first).

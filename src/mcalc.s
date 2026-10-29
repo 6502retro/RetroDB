@@ -50,7 +50,7 @@ s_expok2:  .byte " records to|", 0
 s_expok3:  .byte "||Open it in Mouse Calc.", 0
 s_nofiles: .byte "There are no Mouse Calc sheets in|"
            .byte "this folder. Copy one next to|"
-           .byte "MOUSEDB.SYSTEM and try again.", 0
+           .byte "RETRODB.SYSTEM and try again.", 0
 s_impq1:   .byte "Add the sheet's rows to this|"
            .byte "database, or replace its records|"
            .byte "with them? (Revert to Saved brings|"
@@ -247,7 +247,7 @@ cmd_export:
         ldy #>al_badname
         jsr alert
         jmp @dlg
-@named: ; never let an export take MouseDB's own file names
+@named: ; never let an export take RetroDB's own file names
         LDAY EXPNAME
         jsr setp1
         LDAY s_lastnm
@@ -263,7 +263,7 @@ cmd_export:
         jsr namecmp
         bne @cpn
 @nmc0:  jmp @nmc
-@cpn:   ; mc_path = EXPNAME (relative to the MouseDB folder)
+@cpn:   ; mc_path = EXPNAME (relative to the RetroDB folder)
         ldx EXPNAME
 @cp:    lda EXPNAME,x
         sta mc_path,x

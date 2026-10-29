@@ -1,8 +1,8 @@
-# MouseDB 1.1
+# RetroDB 1.1
 
 A forms database for the enhanced Apple IIe, IIc and IIgs, by 6502Retro.
 
-MouseDB keeps any list you can describe with a form, in the spirit of
+RetroDB keeps any list you can describe with a form, in the spirit of
 PFS:File (1982), with the look and feel of Mouse Calc and RetroInv:
 80-column MouseText screens, pull-down menus, mouse or keyboard, and
 Mouse Calc import and export.
@@ -23,14 +23,14 @@ Mouse Calc import and export.
 - Export the list to a Mouse Calc 1.1 sheet with live SUM totals; import a
   sheet by matching row-1 headings to fields, or make a new database from one
 
-MouseDB contains no code from PFS:File; that program was only a model for
+RetroDB contains no code from PFS:File; that program was only a model for
 what a forms database does.
 
 ## Running it
 
-Boot `release/MOUSEDB-1.1.po` (a 140K ProDOS disk) on an enhanced IIe with
+Boot `release/RETRODB-1.1.po` (a 140K ProDOS disk) on an enhanced IIe with
 an 80-column card, a IIc or a IIgs, or in an emulator. ProDOS starts
-MOUSEDB.SYSTEM. Three sample databases (ADDRESSES, COLLECTION, SOFTWARE)
+RETRODB.SYSTEM. Three sample databases (ADDRESSES, COLLECTION, SOFTWARE)
 and a sample sheet (COLLECT.MC) are on the disk.
 
 The Owner's Manual explains everything.
@@ -39,12 +39,12 @@ The Owner's Manual explains everything.
 
 Needs cc65 (ca65/ld65), Python 3 with Pillow, and py65 for the tests.
 
-    ./build.sh                 # build/MOUSEDB.SYSTEM
-    python3 tools/mkrelease.py # release/MOUSEDB-1.1.po
+    ./build.sh                 # build/RETRODB.SYSTEM
+    python3 tools/mkrelease.py # release/RETRODB-1.1.po
     for t in test/t*.py; do python3 $t; done
     python3 tools/shots.py     # screenshots for the manual
 
-The tests run MouseDB in a 6502 simulator (tools/sim.py) with ProDOS MLI
+The tests run RetroDB in a 6502 simulator (tools/sim.py) with ProDOS MLI
 calls, auxiliary memory and /RAM emulated.
 
 ## Layout

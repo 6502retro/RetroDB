@@ -1,8 +1,8 @@
-"""Write the sample databases shipped on the MouseDB disk (MOUSEDB1 text files)."""
+"""Write the sample databases shipped on the RetroDB disk (RETRODB1 text files)."""
 import sys, os
 KIND = {'Text': 1, 'Number': 2, 'Money': 3, 'Date': 4, 'Yes/No': 5, 'No.': 6, 'Part Of': 7}
 def db(path, fields, records):
-    out = ['MOUSEDB1', str(len(fields))]
+    out = ['RETRODB1', str(len(fields))]
     for (n, k, l, s) in fields:
         out.append('"%s",%d,%d,%d' % (n, KIND[k], l if k == 'Text' else {'Number': 10, 'Money': 12, 'Date': 10, 'Yes/No': 3, 'No.': 4, 'Part Of': 20}[k], s))
     out.append(str(len(records)))
