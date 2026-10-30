@@ -2,7 +2,7 @@ import sys, os
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from applesoft import tokenize
 
-TOTAL = 280
+TOTAL = int(os.environ.get("PO_BLOCKS", 280))   # up to 4096 (one bitmap block)
 img = bytearray(TOTAL * 512)
 used = set(range(0, 7))  # boot 0-1, volume dir 2-5, bitmap 6
 nxt = 7

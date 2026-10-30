@@ -84,21 +84,21 @@ t = a.plain()
 check('report groups by Part Of', 'Group by: \u2190 Part Of' in t and 'Shelf' in t and '(blank)' in t)
 check('report names records by their Name', 'Highest:  Disk II' in t and 'Lowest:   Joystick' in t)
 a.key(0x1B); a.run()
-# export, then make a new database from the sheet: No. and Part Of come back
-a.key('X', oa=True); a.run(); a.key('\r'); a.run(); a.key('\r'); a.run()
+# export ODS and CSV, then make a new database from the ODS file: No. and Part Of come back
+a.key('X', oa=True); a.run(); a.key('\r'); a.run(); a.key('\r'); a.run(); a.key('\r'); a.run()
+a.key('X', oa=True); a.run(); a.key('C'); a.run(); a.key('\r'); a.run(); a.key('\r'); a.run()
 menu(a, 1, 0); a.run()                 # New Database (opens Design Form)
 a.key(0x1B); a.run()
-a.types['GEAR.MC'] = 0xF8
-a.key('I', oa=True); a.run(); pick(a, 'GEAR.MC')
+a.key('I', oa=True); a.run(); pick(a, 'GEAR.ODS')
 check('import offers to create', 'Make a new database' in a.plain())
 a.key('\r'); a.run(); a.key('\r'); a.run()
 L = listrows(a, 9)
 check('the new database has the links: %s' % L, any(r.startswith('6    Joystick') and 'Shelf' in r for r in L) and any(r.startswith('8    Oregon Trail') and 'Shelf' in r for r in L))
 menu(a, 1, 5); t = a.plain(); a.key(0x1B); a.run()
 check('its fields are No. and Part Of again', '← No.' in t and 'Part Of' in t)
-# importing the sheet again with Add: the copies keep their links among
+# importing the CSV file with Add: the copies keep their links among
 # themselves, numbered past the records already there
-a.key('I', oa=True); a.run(); pick(a, 'GEAR.MC'); a.key('\r'); a.run()
+a.key('I', oa=True); a.run(); pick(a, 'GEAR.CSV'); a.key('\r'); a.run()
 t = a.plain(); a.key('\r'); a.run()
 L = listrows(a, 17)
 check('Add: 18 records', '18 of 250' in rows(a, 22, 23))

@@ -336,7 +336,11 @@ class Apple:
             p = self.path(pb)
             if p is None or not os.path.exists(p):
                 return 0x46
-            os.remove(p)
+            assert all(g['p'] != p for g in self.files.values()), 'destroying an open file: ' + p
+            if os.environ.get('SIM_KEEP'):
+                os.replace(p, p + '.kept')
+            else:
+                os.remove(p)
             self.types.pop(os.path.basename(p), None)
             return 0
         if cmd == 0xC2:                 # RENAME
@@ -361,7 +365,19 @@ class Apple:
             return 0
         if cmd == 0xCE:                 # SET_MARK
             f = self.files.get(mm[pb + 1])
-            f['pos'] = mm[pb + 2] | mm[pb + 3] << 8 | mm[pb + 4] << 16
+            if f is None:
+                return 0x43
+            pos = mm[pb + 2] | mm[pb + 3] << 8 | mm[pb + 4] << 16
+            if pos > len(f['d']):
+                return 0x4D
+            f['pos'] = pos
+            return 0
+        if cmd == 0xD1:                 # GET_EOF
+            f = self.files.get(mm[pb + 1])
+            if f is None:
+                return 0x43
+            n = len(f['d'])
+            mm[pb + 2], mm[pb + 3], mm[pb + 4] = n & 0xFF, n >> 8 & 0xFF, n >> 16
             return 0
         if cmd == 0xC8 and self.ram is not None:
             n = mm[self.rd16(pb + 1)]
@@ -371,8 +387,9 @@ class Apple:
                 d[4] = 0xF3
                 d[5:8] = b'RAM'
                 d[0x25] = self.ram
-                self.files[1] = {'p': '/RAM', 'd': d, 'pos': 0, 'nl': None, 'dir': True}
-                mm[pb + 5] = 1
+                ref = min(set(range(1, 9)) - set(self.files))
+                self.files[ref] = {'p': '/RAM', 'd': d, 'pos': 0, 'nl': None, 'dir': True}
+                mm[pb + 5] = ref
                 return 0
         if cmd == 0xC8:                 # OPEN
             p = self.path(pb)
@@ -384,12 +401,20 @@ class Apple:
                 d = self.dirfile(p)
             else:
                 d = bytearray(open(p, 'rb').read())
-            self.files[1] = {'p': p, 'd': d, 'pos': 0, 'nl': None,
-                             'dir': os.path.isdir(p)}
-            mm[pb + 5] = 1
+            buf = self.rd16(pb + 3)
+            # each open file needs its own 1K buffer: sharing one would
+            # corrupt files on a real Apple
+            for g in self.files.values():
+                assert g.get('buf') != buf, 'two open files share the buffer $%04X' % buf
+                assert g['p'] != p, 'file opened twice: ' + p
+            assert buf & 0xFF == 0 and buf + 0x400 <= 0xBF00, 'bad file buffer $%04X' % buf
+            ref = min(set(range(1, 9)) - set(self.files))
+            self.files[ref] = {'p': p, 'd': d, 'pos': 0, 'nl': None,
+                               'dir': os.path.isdir(p), 'buf': buf}
+            mm[pb + 5] = ref
             return 0
         f = self.files.get(mm[pb + 1])
-        if cmd in (0xC9, 0xCA, 0xCB, 0xCC, 0xD0) and f is None:
+        if cmd in (0xC9, 0xCA, 0xCB, 0xCC, 0xD0, 0xCF) and f is None:
             return 0x43
         if cmd == 0xC9:                 # NEWLINE
             f['nl'] = (mm[pb + 2], mm[pb + 3])
@@ -435,6 +460,10 @@ class Apple:
             eof = mm[pb + 2] | mm[pb + 3] << 8 | mm[pb + 4] << 16
             del f['d'][eof:]
             f['pos'] = min(f['pos'], eof)
+            return 0
+        if cmd == 0xCF:                 # GET_MARK
+            n = f['pos']
+            mm[pb + 2], mm[pb + 3], mm[pb + 4] = n & 0xFF, n >> 8 & 0xFF, n >> 16
             return 0
         if cmd == 0xCC:                 # CLOSE
             if not f.get('dir'):

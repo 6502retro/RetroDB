@@ -14,10 +14,12 @@ def entries():
 def read(e):
     st, key = e[0] >> 4, e[17] | e[18] << 8
     eof = e[21] | e[22] << 8 | e[23] << 16
+    def sap(k):
+        ix = B(k); return b''.join(B(ix[i] | ix[256+i] << 8) if ix[i] | ix[256+i] else bytes(512) for i in range(256))
     if st == 1: data = B(key)
+    elif st == 2: data = sap(key)
     else:
-        ix = B(key); data = b''.join(B(ix[i] | ix[256+i] << 8) for i in range(256) if ix[i] | ix[256+i])
-        if st == 3: raise SystemExit('tree files not supported')
+        mx = B(key); data = b''.join(sap(mx[i] | mx[256+i] << 8) if mx[i] | mx[256+i] else bytes(512 * 256) for i in range(128))
     return data[:eof], e[16]
 for e in entries():
     name = e[1:1+(e[0] & 15)].decode()

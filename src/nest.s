@@ -1437,30 +1437,8 @@ fm_nest:
         rts
 
 ; ---------------------------------------------------------------
-; Mouse Calc
+; import
 ; ---------------------------------------------------------------
-; wr_nest: a No. or Part Of as a number cell (nothing if blank)
-wr_nest:
-        ldy fk_o
-        lda (rp),y
-        sta fn_v
-        iny
-        lda (rp),y
-        sta fn_v+1
-        ora fn_v
-        beq @d
-        lda #0
-        sta en_neg
-        lda #$80
-        jsr cell_begin
-        jsr v2num
-        jsr fmtnum
-        lda #0
-        sta en_frac
-        jsr enc_dec
-        jmp cell_end
-@d:     rts
-
 ; nestkinds: a new form made from a sheet: a column headed "No." or
 ; "Part Of" (holding numbers, or nothing) becomes that kind of field
 nestkinds:

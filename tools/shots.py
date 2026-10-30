@@ -15,10 +15,10 @@ def shot(a, name):
 os.makedirs(OUT, exist_ok=True)
 fresh(V)
 for n in os.listdir('build/samples'): shutil.copy('build/samples/' + n, V + '/' + n)
-if os.path.exists('build/COLLECT.MC'): shutil.copy('build/COLLECT.MC', V + '/COLLECT.MC')
+for n in ('COLLECT.ODS', 'COLLECT.CSV', 'RETRODB.OVL'):
+    if os.path.exists('build/' + n): shutil.copy('build/' + n, V + '/' + n)
 open(V + '/RETRODB.LAST', 'wb').write(b'COLLECTION\r')
 a = boot('build/RETRODB.SYSTEM', V, prefix='/RETRODB/', startpath='/RETRODB/RETRODB.SYSTEM')
-a.types['COLLECT.MC'] = 0xF8
 a.run(); a.key(' '); a.run()
 for _ in range(5): a.key(0x0A)
 a.run(); a.mouse_to(74, 21); a.run(); shot(a, 'main')
@@ -30,8 +30,8 @@ a.key('L', oa=True); a.run(); a.key('\t\t\t\t>=1984\t\t\t>100'); a.run(); shot(a
 a.key('\r'); a.run(); shot(a, 'selected')
 a.key('A', oa=True); a.run()
 a.key('R', oa=True); a.run(); shot(a, 'report'); a.key('\r'); a.run()
-a.key('X', oa=True); a.run(); shot(a, 'export'); a.key(0x1B); a.run()
-a.key('I', oa=True); a.run(); shot(a, 'import'); a.key(0x1B); a.run()
+a.key('X', oa=True); a.run(); shot(a, 'export'); a.key('\r'); a.run(); shot(a, 'exportname'); a.key(0x1B); a.run()
+a.key('I', oa=True); a.run(); shot(a, 'import'); pick(a, 'COLLECT.CSV'); shot(a, 'importq'); a.key(0x1B); a.run()
 a.key('O', oa=True); a.run(); shot(a, 'open'); a.key(0x1B); a.run()
 menu(a, 3, 0); a.key('Q', oa=True); a.run(); shot(a, 'savech')
 shutil.copy('build/splash.png', OUT + '/splash.png'); bezel(OUT + '/splash.png', OUT + '/fig-splash.png')

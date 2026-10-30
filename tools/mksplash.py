@@ -100,7 +100,7 @@ def text(s, y, color=WHITE):
                         pix[y + r][x + 2 * c + d] = color
         x += pitch
 
-text("RETRODB 1.1", 156)
+text("RETRODB 1.2", 156)
 text("FORMS DATABASE", 169)
 text("PRESS ANY KEY OR CLICK", 183)
 

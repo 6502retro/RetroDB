@@ -26,8 +26,8 @@ mi3:    .byte "Save", 0
 mi4:    .byte "Save As", G_DOTS, 0
 mi5:    .byte "Revert to Saved", 0
 mi6:    .byte "Design Form", G_DOTS, 0
-mi7:    .byte "Import from Mouse Calc", G_DOTS, 0
-mi8:    .byte "Export to Mouse Calc", G_DOTS, 0
+mi7:    .byte "Import ODS or CSV", G_DOTS, 0
+mi8:    .byte "Export ODS or CSV", G_DOTS, 0
 mi9:    .byte "Quit", 0
 mi10:   .byte "New Record", G_DOTS, 0
 mi11:   .byte "Edit Record", G_DOTS, 0

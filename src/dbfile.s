@@ -29,6 +29,10 @@ al_badinv: .word t_saveas, s_badinv
 al_badnm2: .word t_saveas, s_badname
            .byte 1
            .word b_ok
+s_badname: .byte "A ProDOS name starts with a letter|"
+           .byte "and has up to 15 letters, digits|"
+           .byte "and periods.", 0
+b_replace: .byte "Replace", 0
 s_invex:   .byte "A database with that name|"
            .byte "already exists. Replace it?", 0
 al_invex:  .word t_saveas, s_invex

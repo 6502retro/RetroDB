@@ -9,6 +9,7 @@ def fresh(v, files=()):
 def start(vol='test/vol', **kw):
     # memory starts full of junk, as on a real Apple (SIM_GARBAGE=0 for zeros)
     kw.setdefault('garbage', os.environ.get('SIM_GARBAGE', '7') if os.environ.get('SIM_GARBAGE', '7') != '0' else None)
+    shutil.copy('build/RETRODB.OVL', vol + '/RETRODB.OVL')
     a = boot('build/RETRODB.SYSTEM', vol, **kw); a.run(); a.key(' '); a.run(); return a
 def show(a):
     print(a.plain()); print('-' * 80)

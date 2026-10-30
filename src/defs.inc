@@ -106,8 +106,10 @@ colmap    = $0384       ; 64 bytes
         .import __XBSS_RUN__, __XBSS_SIZE__
         .import __SPLZ_RUN__, __SPLZ_SIZE__
         .import __BSS_RUN__, __BSS_SIZE__
-POOLA     = __XBSS_RUN__ + __XBSS_SIZE__  ; main memory left after LCODE
-POOLA_END = $4000
+OVLBASE   = $2900                         ; overlays (xfer.s, retrodb.cfg)
+POOLA     = OVLBASE                       ; (no records at $2000-$3FFF:
+POOLA_END = OVLBASE                       ; the overlays go there)
+OVLSIZE   = $4000 - OVLBASE
 TBASE     = __SPLZ_RUN__                  ; nesting tables (nest.s), over
                                           ; the title picture once shown
 TBSIZE    = 3 * 250 + 128 + 64            ; NOLO NOHI DEPTH NOMAP FAKEREC

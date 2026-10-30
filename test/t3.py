@@ -98,12 +98,12 @@ check('empty name refused', 'Please give every field a name' in a.plain())
 a.key('\r'); a.run(); a.key('code\r'); a.run()
 check('duplicate name refused (any case)', 'Two fields have the same name' in a.plain())
 a.key('\r'); a.run(); a.key(0x1B); a.run()
-# editing the record in main memory, then drawing records in aux memory
-# (a smaller form, so that pool A holds the first record)
+# editing a record, then drawing the records around it (with aux memory,
+# records go there first; pool B only takes what aux can't hold)
 F2 = F[:5] + [('More', 'Text', 12, 0)] + F[6:]
 fresh(V); open(V + '/BIG', 'wb').write(dbfile('BIG', F2, R[:20])); open(V + '/RETRODB.LAST', 'wb').write(b'BIG\r')
 a = start(V)
-check('record 0 is in main memory, record 1 in aux', a.main[0x0A00] == 0 and a.main[0x0A01] == 1)
+check('a small database lives in aux memory', list(a.main[0x0A00:0x0A00 + 20]) == [1] * 20)
 a.key('\r'); a.run(); a.key('\t\t'); a.key(0x18); a.key('8\r'); a.run()
 L = listrows(a, 3)
 check('after editing it the other rows are right: %s' % L[1][:12], L[0].startswith('Item 000') and L[1].startswith('Item 001') and L[2].startswith('Item 002'))

@@ -1,5 +1,5 @@
 ; ---------------------------------------------------------------
-; RetroDB 1.1 - a forms database for the Apple II
+; RetroDB 1.2 - a forms database for the Apple II
 ; by 6502Retro.  ProDOS 8 system program, 80-column MouseText UI.
 ; Built on the RetroInv 2.5 engine.
 ; ---------------------------------------------------------------
@@ -524,7 +524,7 @@ drawnoform:
         .segment "RODATA"
 s_noform1: .byte "This database has no form yet.", 0
 s_noform2: .byte "Choose Design Form from the File menu to set up its", 0
-s_noform3: .byte "fields, or Import from Mouse Calc to start from a sheet.", 0
+s_noform3: .byte "fields, or Import an ODS or CSV file to start from one.", 0
         .segment "CODE"
 
 ; drawrow: A = view position, cy = row
@@ -1489,7 +1489,7 @@ s_full:    .byte "The disk is full.", 0
 s_io:      .byte "Disk I/O error.", 0
 s_perr:    .byte "ProDOS error $", 0
 s_notdb:   .byte "It isn't a RetroDB database.", 0
-s_about:   .byte "RetroDB 1.1 for the Apple II||"
+s_about:   .byte "RetroDB 1.2 for the Apple II||"
            .byte "A forms database in the spirit|"
            .byte "of PFS:File, by 6502Retro", 0
 s_fullm:   .byte "The database is full. Start a|"
@@ -1598,6 +1598,9 @@ FINDSTR:  .res 22
         .include "report.s"
         .include "file.s"
         .include "dbfile.s"
-        .include "mcalc.s"
+        .include "xfer.s"
+        .include "ov_exp.s"
+        .include "ov_imp.s"
+        .include "ov_ods.s"
         .include "nest.s"
 
