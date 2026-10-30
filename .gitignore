@@ -7,3 +7,5 @@ build/vexp/
 build/shots/
 test/v*/
 __pycache__/
+build/emu*
+build/RETRODB.LAST

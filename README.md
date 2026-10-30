@@ -1,6 +1,12 @@
 # RetroDB 1.1
 
-A forms database for the enhanced Apple IIe, IIc and IIgs, by 6502Retro.
+Apple IIe, IIc, IIgs Database Software: a forms database for the enhanced
+Apple IIe, IIc and IIgs, by 6502Retro.
+
+![The RetroDB main screen](manual/fig-main.png)
+
+**Download:** [RETRODB-1.1.po](release/RETRODB-1.1.po) (140K ProDOS disk) ·
+[Owner's Manual (PDF)](docs/RetroDB%20Owner's%20Manual.pdf)
 
 RetroDB keeps any list you can describe with a form, in the spirit of
 PFS:File (1982), with the look and feel of Mouse Calc and RetroInv:
@@ -24,7 +30,8 @@ Mouse Calc import and export.
   sheet by matching row-1 headings to fields, or make a new database from one
 
 RetroDB contains no code from PFS:File; that program was only a model for
-what a forms database does.
+what a forms database does. Its first version was called MouseDB, and it
+still opens databases MouseDB saved.
 
 ## Running it
 
@@ -33,7 +40,7 @@ an 80-column card, a IIc or a IIgs, or in an emulator. ProDOS starts
 RETRODB.SYSTEM. Three sample databases (ADDRESSES, COLLECTION, SOFTWARE)
 and a sample sheet (COLLECT.MC) are on the disk.
 
-The Owner's Manual explains everything.
+The [Owner's Manual](docs/RetroDB%20Owner's%20Manual.pdf) explains everything.
 
 ## Building
 
@@ -45,7 +52,9 @@ Needs cc65 (ca65/ld65), Python 3 with Pillow, and py65 for the tests.
     python3 tools/shots.py     # screenshots for the manual
 
 The tests run RetroDB in a 6502 simulator (tools/sim.py) with ProDOS MLI
-calls, auxiliary memory and /RAM emulated.
+calls, auxiliary memory and /RAM emulated. Memory starts full of junk, as
+on a real Apple (set SIM_GARBAGE=0 for zeros). tools/manual/build.py makes
+the PDF manual from tools/manual/manual.md.
 
 ## Layout
 
@@ -55,5 +64,7 @@ calls, auxiliary memory and /RAM emulated.
     prodos/     ProDOS 8 2.4.3 and BASIC.SYSTEM (see NOTICE)
     art/        the 6502 Retro Computing logo used on the title screen
     manual/     screenshots
+    docs/       the Owner's Manual (PDF)
+    release/    the disk image
 
 MIT License; see LICENSE and NOTICE.
