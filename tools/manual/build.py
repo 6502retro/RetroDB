@@ -27,7 +27,7 @@ STRIPES = ['#77B957', '#F3BB44', '#E6883C', '#D04940', '#8B4292', '#4998D1']
 # screenshots, doubled with nearest-neighbour so the pixels stay sharp
 os.makedirs(IMG, exist_ok=True)
 for n in ['splash', 'main', 'menu', 'design', 'edit', 'select', 'selected', 'report',
-          'export', 'import', 'open', 'savech']:
+          'export', 'import', 'importq', 'open', 'savech']:
     im = Image.open(f'{SRC}/{n}.png').convert('RGB')
     im.resize((im.width * 2, im.height * 2), Image.NEAREST).save(f'{IMG}/{n}.png')
 lg = Image.open(LOGO); lg.thumbnail((900, 900)); lg.save(f'{IMG}/logo.png')
@@ -35,8 +35,8 @@ lg = Image.open(LOGO); lg.thumbnail((900, 900)); lg.save(f'{IMG}/logo.png')
 IMAGES = [
     ('title screen', 'splash'), ('main screen', 'main'), ('Record menu', 'menu'),
     ('Design Form', 'design'), ('record window', 'edit'), ('Selecting the items', 'select'),
-    ('four records', 'selected'), ('grouped by Part Of', 'report'), ('Exporting', 'export'),
-    ('sheet to import', 'import'), ('Open Database', 'open'), ('asks before closing', 'savech'),
+    ('four records', 'selected'), ('grouped by Part Of', 'report'), ('ODS or CSV', 'export'),
+    ('file to import', 'import'), ('Add or Replace', 'importq'), ('Open Database', 'open'), ('asks before closing', 'savech'),
 ]
 
 
@@ -58,7 +58,7 @@ for p in parts:
     if p.startswith('## '):
         title, _, rest = p.partition('\n')
         sections.append((title[3:].strip(), rest))
-assert sections[0][0] == 'RetroDB 1.1'
+assert sections[0][0] == 'RetroDB 1.2'
 front, chapters = sections[0], sections[1:]
 # the glossary goes with Appendix D
 if chapters[-1][0] == 'Glossary':
@@ -157,7 +157,7 @@ def body_html(pages):
     fr = front[1]
     notice = fr.split('### Notice', 1)[1]
     copy = f'''<section class="copy"><div class="copyin">{stripes('stripes thin')}
-<p class="cprod">RetroDB 1.1 Owner&rsquo;s Manual</p>
+<p class="cprod">RetroDB 1.2 Owner&rsquo;s Manual</p>
 {md2html(notice, False)}
 <p class="cfoot">&copy; 2026 Jonathan Adar (6502Retro). RetroDB is released under the MIT License.</p>
 </div><span class="mk">@@copy@@</span></section>'''
@@ -171,7 +171,7 @@ def cover_html():
   <div class="cband"><p class="capple">For the Apple IIe, Apple IIc and Apple IIGS</p></div>
   <div class="cmid">
     <p class="ctitle">RetroDB</p>
-    <p class="csub">Forms Database &middot; Version 1.1</p>
+    <p class="csub">Forms Database &middot; Version 1.2</p>
     <div class="monitor"><img src="file://{IMG}/splash.png"></div>
     <p class="cown">Owner&rsquo;s Manual</p>
   </div>
@@ -184,7 +184,7 @@ def back_html():
 <div class="back">
   {stripes('cstripes top')}
   <div class="bmid"><img class="logo" src="file://{IMG}/logo.png">
-  <p>RetroDB 1.1 &middot; a forms database for the Apple II</p>
+  <p>RetroDB 1.2 &middot; a forms database for the Apple II</p>
   <p class="small">6502Retro &middot; Retro Computing</p></div>
 </div></body></html>'''
 

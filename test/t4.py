@@ -114,37 +114,41 @@ for n in ('HAND.ODS', 'HAND.CSV'):
                                          ['Lisa 2', '', '', '1200.50', '', 'No'],
                                          ['', '', '', '7.00', '', ''],
                                          ['Last', '', '', '', '', '']])
+# a LibreOffice sheet with a totals row: the row with SUM in it is left out
+open(T + '/tot.csv', 'w').write('Title,Price,Year\nA,1.50,1990\nB,2.25,1991\n,,\nTotal,=SUM(B2:B3),=B2*2\n')
+shutil.copy(lo(T + '/tot.csv', 'ods'), V + '/TOT.ODS')
+check('LibreOffice made a SUM formula', 'of:=SUM(' in zipfile.ZipFile(V + '/TOT.ODS').read('content.xml').decode())
+a = go()
+a.key('I', oa=True); a.run(); pick(a, 'TOT.ODS'); a.key('R'); a.run()
+check('totals row left out: 2 records', 'Imported 2 records.' in a.plain())
+a.key('\r'); a.run(); a.key('S', oa=True); a.run()
+hdr, got = body('GAMES')
+check('totals sheet rows', got == [['A', '', '1990', '1.50', '', ''], ['B', '', '1991', '2.25', '', '']])
 # no matching headings
 open(V + '/NONE.CSV', 'w').write('Foo\nx\n')
 a = go(); a.key('I', oa=True); a.run(); pick(a, 'NONE.CSV')
 check('no matching headings: message', 'None of the headings in row 1' in a.plain())
 a.key('\r'); a.run()
 # a new database from RetroInv's sample inventory, through LibreOffice
-inv = [l.split(' ', 1)[1].split(' | ') for l in subprocess.run(['node', 'test/mccheck.js', 'test/RETROINV.SAMPLE.INV'],
-       capture_output=True, text=True).stdout.splitlines() if l[:1].isdigit() and ' | ' in l]
-def cell(v):
-    v = v.strip()
-    if v.startswith('"'): return v.strip('"')
-    if '/f8' in v: return '$%.2f' % float(v.split('/')[0])
-    return v.split('/')[0]
-inv = [[cell(c) for c in r] for r in inv]
-inv = [r for r in inv if any(r) and 'Total' not in r]
-with open(T + '/inv.csv', 'w', newline='') as f: csv.writer(f).writerows(inv)
+# RetroInv's sample inventory (exported from Mouse Calc), saved as CSV
+shutil.copy('test/retroinv.csv', T + '/inv.csv')
 print(open(T + '/inv.csv').read()[:300])
 shutil.copy(lo(T + '/inv.csv', 'ods'), V + '/INV.ODS')
-for n in ('INV.ODS',):
+shutil.copy(T + '/inv.csv', V + '/INV.CSV')
+for n in ('INV.ODS', 'INV.CSV'):
     a = go()
     menu(a, 1, 0)                         # New Database (no changes to save)
     a.key(0x1B); a.run()                  # leave Design Form empty
     a.key('I', oa=True); a.run()
     pick(a, n)
     show(a)
-    check('offers to make a database from the file', 'Make a new database from this' in a.plain() and 'Its 12 columns become' in a.plain())
+    check(n + ': offers to make a database from the file', 'Make a new database from this' in a.plain() and 'Its 12 columns become' in a.plain())
     a.key('\r'); a.run()
     check('made from RetroInv: 13 records', 'Imported 13 records.' in a.plain())
     a.key('\r'); a.run()
-    a.key('S', oa=True); a.run(); a.key('COLLECTION\r'); a.run()
-    hdr, got = body('COLLECTION')
+    db = 'C' + n[4]
+    a.key('S', oa=True); a.run(); a.key(db + '\r'); a.run()
+    hdr, got = body(db)
     print(hdr); print(got[:3])
     check('fields from the headings', [h.split(',')[0] for h in hdr] == ['"Name"', '"Maker"', '"Serial #"', '"Year"', '"Type"', '"Condition"', '"Location"', '"Value"', '"Notes"', '"Slot"', '"Part Of"', '"Item No."'])
     check('kinds guessed: Year Number, Value Money, Item No. Number', hdr[3].split(',')[1] == '2' and hdr[7].split(',')[1] == '3' and hdr[11].split(',')[1] == '2')

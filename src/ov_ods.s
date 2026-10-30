@@ -1367,8 +1367,9 @@ x_attr: lda x_close
         sta r_rep
 @d:     rts
 @c:     cmp #T_CELL
-        bne @s
-        LDAY xa_crep
+        beq @cell
+        jmp @s
+@cell:  LDAY xa_crep
         jsr x_aname_is
         bne @ty
         jsr x_vnum
@@ -1403,11 +1404,35 @@ x_attr: lda x_close
         beq @cv
         LDAY xa_bval
         jsr x_aname_is
-        bne @d
+        beq @cv
+        LDAY xa_form            ; a SUM formula: a totals row, left out
+        jsr x_aname_is
+        bne @x
+        ldx #0
+@fl:    lda TMP2,x
+        beq @x
+        ldy #0
+@fc:    lda TMP2,x
+        cmp s_sum,y
+        bne @fn
+        inx
+        iny
+        cpy #4
+        bne @fc
+        inc r_sum
+        rts
+@fn:    txa                     ; (back to the character after the start)
+        sty fz_y
+        sec
+        sbc fz_y
+        tax
+        inx
+        bne @fl
+@x:     rts
 @cv:    ldx #0                  ; the value -> c_val
 @cvl:   lda TMP2,x
         sta c_val,x
-        beq @d
+        beq @x
         inx
         cpx #31
         bne @cvl
@@ -1415,10 +1440,10 @@ x_attr: lda x_close
         sta c_val,x
         rts
 @s:     cmp #T_S
-        bne @d
+        bne @x
         LDAY xa_c
         jsr x_aname_is
-        bne @d
+        bne @x
         jsr x_vnum
         sta s_n
         rts
@@ -1429,6 +1454,8 @@ xa_val:  .byte "office:value", 0
 xa_dval: .byte "office:date-value", 0
 xa_bval: .byte "office:boolean-value", 0
 xa_c:    .byte "text:c", 0
+xa_form: .byte "table:formula", 0
+s_sum:   .byte "SUM("
 
 ; x_aname_is: Z set if the attribute's name is A/Y
 x_aname_is:
@@ -1598,6 +1625,7 @@ row_begin:
         sta r_col
         sta r_pend
         sta r_any
+        sta r_sum
         lda #1
         sta r_rep
 cell_reset:
@@ -1743,6 +1771,8 @@ rb_put: ldx rowlen+1
 
 ; row_end: the row's line (r_rep times) -> RETRODB.TMP
 row_end:
+        lda r_sum               ; a totals row
+        bne @d
         lda r_any
         beq @d                  ; nothing in it
         lda #$0D
@@ -1775,6 +1805,8 @@ row_end:
 
         .segment "OV2BSS"
 x_vars:
+r_sum:   .res 1
+fz_y:    .res 1
 x_st:    .res 1
 x_nlen:  .res 1
 x_alen:  .res 1

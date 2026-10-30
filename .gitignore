@@ -9,3 +9,5 @@ test/v*/
 __pycache__/
 build/emu*
 build/RETRODB.LAST
+tools/manual/*.pdf
+tools/manual/img/

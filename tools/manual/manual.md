@@ -1,8 +1,8 @@
 # RetroDB Owner's Manual
 
-Oct 28, 2026 · @Jonathan Adar
+Oct 30, 2026 · @Jonathan Adar
 
-## RetroDB 1.1
+## RetroDB 1.2
 
 **A forms database for the Apple IIe, IIc and IIgs**
 
@@ -12,7 +12,7 @@ by 6502Retro
 
 ### Notice
 
-RetroDB is new software written for this release. Its first version was called MouseDB. It was modeled on the way PFS:File (Software Publishing Corporation, 1982) organizes information into forms, but it contains no code or text from that program, and it is not affiliated with Software Publishing Corporation. Mouse Calc is a product of Version Soft. Apple, Apple IIe, Apple IIc, Apple IIGS and ProDOS are trademarks of Apple Inc.
+RetroDB is new software written for this release. Its first version was called MouseDB. It was modeled on the way PFS:File (Software Publishing Corporation, 1982) organizes information into forms, but it contains no code or text from that program, and it is not affiliated with Software Publishing Corporation. LibreOffice is a trademark of The Document Foundation; Excel is a trademark of Microsoft Corporation; Google Sheets is a trademark of Google LLC. Apple, Apple IIe, Apple IIc, Apple IIGS and ProDOS are trademarks of Apple Inc.
 
 RetroDB is provided as is, without warranty of any kind. Keep backup copies of your disks and your databases. See the LICENSE file on the source disk for the terms under which RetroDB may be copied and shared.
 
@@ -20,7 +20,7 @@ RetroDB is provided as is, without warranty of any kind. Keep backup copies of y
 
 RetroDB keeps any kind of list you can describe with a form: an address book, a record collection, a parts list, a software library. You design the form once, fill in one form for each thing you want to keep track of, and RetroDB finds, sorts, totals and reports on them for you.
 
-If you have used RetroInv or Mouse Calc, RetroDB will feel familiar at once. It uses the same pull-down menus, the same mouse and keyboard commands, the same dialog boxes and the same way of saving your work. It also trades sheets with Mouse Calc in both directions.
+If you have used RetroInv or Mouse Calc, RetroDB will feel familiar at once. It uses the same pull-down menus, the same mouse and keyboard commands, the same dialog boxes and the same way of saving your work. It also trades records with today's spreadsheets in both directions, as ODS and CSV files.
 
 ### How this manual is organized
 
@@ -31,7 +31,7 @@ If you have used RetroInv or Mouse Calc, RetroDB will feel familiar at once. It 
 - **Chapter 5, Selecting and Sorting**, shows how to see just the records you want, in the order you want.
 - **Chapter 6, Reports**, explains the group-and-total report.
 - **Chapter 7, Saving and Keeping More Than One Database**, covers Save, Save As, Open and Revert to Saved.
-- **Chapter 8, RetroDB and Mouse Calc**, explains exporting and importing sheets.
+- **Chapter 8, Spreadsheets: ODS and CSV**, explains exporting records to a spreadsheet and importing them back.
 - **Chapter 9, Records Inside Records**, shows how to keep track of what is inside what: cards in a computer, a drive on its card, things in a box on a shelf.
 - **The appendixes** summarize every command and message, give technical details, and help when something goes wrong.
 
@@ -57,8 +57,8 @@ RetroDB runs on an enhanced Apple IIe with an 80-column card, an Apple IIc or II
 | Enhanced Apple IIe, IIc or IIGS | Yes | RetroDB uses MouseText and the 80-column screen. An unenhanced IIe shows NEEDS ENHANCED IIE/IIC/IIGS and stops. |
 | 128K of memory | Recommended | With 128K, records are kept in the auxiliary 64K and up to 250 fit. With 64K, records share main memory and far fewer fit. |
 | A mouse | No | AppleMouse II card on the IIe, the built-in port on the IIc and IIGS. Every command also works from the keyboard. |
-| The RetroDB disk | Yes | A 140K ProDOS disk (RETRODB-1.1.po). It can also be copied to a hard disk or a 3.5-inch disk. |
-| Mouse Calc | No | Only needed to work with exported sheets. |
+| The RetroDB disk | Yes | A 140K ProDOS disk (RETRODB-1.2.po). It can also be copied to a hard disk or a 3.5-inch disk. |
+| A spreadsheet program | No | Only needed to work with exported files: LibreOffice Calc, Excel, Google Sheets, Numbers, or any program that reads ODS or CSV. |
 
 ### What's on the disk
 
@@ -66,9 +66,10 @@ RetroDB runs on an enhanced Apple IIe with an 80-column card, an Apple IIc or II
 | --- | --- |
 | PRODOS | ProDOS 8, version 2.4.3 |
 | RETRODB.SYSTEM | The RetroDB program |
+| RETRODB.OVL | The import and export code, loaded when you use them. Keep it next to RETRODB.SYSTEM. |
 | BASIC.SYSTEM | Applesoft BASIC, for your own programs |
 | ADDRESSES, COLLECTION, SOFTWARE | Three sample databases to explore. COLLECTION shows records inside other records (Chapter 9). |
-| COLLECT.MC | A Mouse Calc sheet exported from COLLECTION, for trying Import |
+| COLLECT.ODS, COLLECT.CSV | COLLECTION exported as an ODS spreadsheet and as a CSV file, for trying Import or for opening on a modern computer |
 | RETRODB.LAST | Remembers which database to open when RetroDB starts |
 
 ### Make a backup copy first
@@ -140,7 +141,7 @@ A command whose name ends in three dots (…) opens a dialog box where you can s
 | Menu | Commands |
 | --- | --- |
 | Apple | About RetroDB |
-| File | New Database, Open, Save, Save As, Revert to Saved, Design Form, Import from Mouse Calc, Export to Mouse Calc, Quit |
+| File | New Database, Open, Save, Save As, Revert to Saved, Design Form, Import ODS or CSV, Export ODS or CSV, Quit |
 | Record | New Record, Edit Record, Duplicate Record, Delete Record, Delete Selected, Find, Find Next |
 | Sort | By (each field of the form), in the order the fields appear on the form |
 | View | Select Records, Show All Records, Report |
@@ -338,7 +339,7 @@ When you first open the report, RetroDB picks a likely grouping for you: the Par
 
 When records are selected (Chapter 5), the window is titled Report on the Selected Records and covers just those. Press RETURN, ESC or click OK to go back to the list.
 
-> **By the Way:** To report on a Date field by year, export the records to Mouse Calc (Chapter 8), or select one year at a time with a criterion such as `1985`.
+> **By the Way:** To report on a Date field by year, export the records to a spreadsheet (Chapter 8), or select one year at a time with a criterion such as `1985`.
 
 ## Chapter 7: Saving and Keeping More Than One Database
 
@@ -394,69 +395,103 @@ Choose Quit from the File menu, or press Open-Apple-Q. After asking about unsave
 
 > **Important!** Turning off the Apple or pressing RESET without quitting loses your unsaved changes, and leaves /RAM unavailable until the Apple is restarted.
 
-## Chapter 8: RetroDB and Mouse Calc
+## Chapter 8: Spreadsheets: ODS and CSV
 
-RetroDB reads and writes Mouse Calc 1.1 sheets directly, so you can move records into a spreadsheet to chart and figure with them, and bring rows from a sheet back in as records. It works the same way as in RetroInv.
+RetroDB exchanges records with spreadsheet programs in two common formats, so you can chart and figure with your records on a modern computer, and bring rows from a spreadsheet back in as records.
 
-### Exporting to Mouse Calc
+- **ODS** (OpenDocument Spreadsheet) is the native format of LibreOffice Calc, and Excel, Google Sheets and Numbers open it too. An ODS file keeps the type of each value: amounts stay amounts and dates stay dates.
+- **CSV** (comma-separated values) is plain text, one row per line. Nearly every program reads and writes it, including Mouse Calc 2.0 and AppleWorks.
 
-1. Arrange the list the way you want the sheet: select records (Chapter 5) to export only some of them, and sort it to set the order of the rows.
-2. Choose Export to Mouse Calc from the File menu, or press Open-Apple-X.
-3. RetroDB suggests a name made from the database's name and `.MC`, such as `COLLECTION.MC`. Change it if you like, then click Export.
+To move a file between the Apple and a modern computer, use a disk image tool such as CiderPress II, a CFFA3000 or other card that reads USB or CompactFlash, or a serial transfer program.
 
-&#91;image: Figure 8-1: Exporting the COLLECTION database\]
+### Exporting
 
-The sheet is saved in the RetroDB folder, and a message tells you how many records went into it and its full path name. If a Mouse Calc sheet with that name is already there, RetroDB asks before replacing it; it won't replace a file that isn't a sheet.
+1. Arrange the list the way you want the spreadsheet: select records (Chapter 5) to export only some of them, and sort it to set the order of the rows.
+2. Choose Export ODS or CSV from the File menu, or press Open-Apple-X.
+3. Click **ODS** or **CSV** (or press O or C).
+4. RetroDB suggests a name made from the database's name and `.ODS` or `.CSV`, such as `COLLECTION.ODS`. Change it if you like, then click Export.
 
-### What the sheet looks like
+&#91;image: Figure 8-1: Choosing ODS or CSV\]
 
-| Sheet | Holds |
+The file is saved in the RetroDB folder, and a message tells you how many records went into it and its full path name. If a file with that name is already there, RetroDB asks before replacing it; it won't write over a database or one of its own files.
+
+### What the exported file holds
+
+| Row | Holds |
 | --- | --- |
-| Row 1 | The field names, one column per field, in the order of the form |
+| Row 1 | The field names, one column per field, in the order of the form. In an ODS file they are in bold. |
 | Rows 2 and on | One record per row, in the order of the list |
-| Two rows below the last record | `Total` in the first Text column, and a live `+SUM` formula under each Money column (or each Number column when the form has no Money field) |
 
-- Text, Date and Yes/No fields become text cells. Dates stay as YYYY-MM-DD. No. and Part Of fields become plain numbers.
-- Number fields become numbers, and Money fields become numbers shown as dollars and cents.
-- Blank fields become empty cells.
-- Each column is made as wide as its field, and the columns that fit are set up to show across Mouse Calc's 80-column screen.
+In an ODS file:
 
-Because the totals are real formulas, they update when you change the numbers in Mouse Calc.
+- Text and Yes/No fields become text, and blank fields empty cells.
+- Number, No. and Part Of fields become numbers.
+- Money fields become dollar amounts, shown as `$1,234.50`.
+- A full date (YYYY-MM-DD) becomes a date, shown the same way; a year, or a year and month, stays text.
+- Each column is made as wide as its field, and the sheet is named after the database.
 
-### Importing from Mouse Calc
+In a CSV file, text is in double quotes, numbers and dates are written plainly (`1985`, `125.50`, `2019-05-11`), and each line ends with a carriage return and line feed, as Windows and most spreadsheets expect.
 
-Choose Import from Mouse Calc from the File menu, or press Open-Apple-I. The dialog lists the Mouse Calc sheets in the RetroDB folder. Pick one and click Import.
+> **Important!** RetroDB writes ODS files without compressing them, so they are much larger than the database: roughly 100 bytes for every field of every record. A database of 200 records with 6 fields makes an ODS file of about 120K, which may not fit on a 140K floppy disk. Export to a hard disk or a 3.5-inch disk, export fewer records at a time, or use CSV, which is about as small as the database.
 
-&#91;image: Figure 8-2: Choosing a sheet to import\]
+### Importing
 
-RetroDB reads row 1 of the sheet as headings and matches each one with a field of the form. The match ignores capitals, spaces and punctuation, so `Item Name` matches a field called ITEMNAME. Columns whose heading matches no field are skipped.
+Choose Import ODS or CSV from the File menu, or press Open-Apple-I. The dialog lists the files in the RetroDB folder whose names end in `.ODS` or `.CSV`. Pick one and click Import.
+
+&#91;image: Figure 8-2: Choosing a file to import\]
+
+RetroDB reads row 1 as headings and matches each one with a field of the form. The match ignores capitals, spaces and punctuation, so `Item Name` matches a field called ITEMNAME. Columns whose heading matches no field are skipped.
 
 It then asks what to do with the rows:
 
 - **Add** puts them after the records you have.
-- **Replace** removes the database's records and puts the sheet's rows in their place.
+- **Replace** removes the database's records and puts the file's rows in their place.
 - **Cancel** leaves the database alone.
 
-Each cell is changed into the type of its field, just as if you had typed it. A value that doesn't fit is left blank. Empty rows, and any row with a `+SUM` formula in it (such as the Total row of an exported sheet), are skipped, so a sheet you exported can come straight back in.
+&#91;image: Figure 8-3: Add or Replace\]
+
+Each cell is changed into the type of its field, just as if you had typed it, so `$1,200.50`, `3/4/1982`, `y` and `FALSE` all work. A value that doesn't fit its field is left blank. Empty rows are skipped, and so is any row of an ODS file with a SUM formula in it, such as a Total row, so a spreadsheet with totals can come straight back in.
 
 > **Important!** Imported records are not on the disk until you save. If the import isn't what you wanted, choose Revert to Saved to go back.
 
-### Making a database from a sheet
+#### CSV files
 
-You can turn any Mouse Calc sheet into a new database. Choose New Database, click Cancel in the Design Form window, and then choose Import from Mouse Calc. Because the new database has no form, RetroDB offers to **Create** one from the sheet:
+RetroDB reads CSV files written by any program:
+
+- The values may be separated by commas, semicolons or tabs; RetroDB looks at row 1 to see which.
+- Values may be in double quotes, with `""` standing for a quote mark inside one. A quote mark inside a value becomes an apostrophe, since RetroDB uses quote marks in its own files.
+- Lines may end with a carriage return, a line feed, or both.
+- In a file separated by semicolons, as many European programs write, numbers like `1.234,50` are read with the comma as the decimal point.
+- Letters beyond plain ASCII, such as é, become a question mark.
+
+#### ODS files
+
+RetroDB reads the first sheet of an ODS file. It takes each cell's value rather than how it is shown, so amounts, dates, true and false, and the results of formulas all come through. It reads up to 255 rows and 63 columns.
+
+An ODS file is compressed, and the Apple has to unpack it a little at a time, so reading one takes a while: about 15 seconds for a small sheet, and a minute or more for a large one. The status line says Reading the ODS file while it works.
+
+> **Important!** Reading an ODS file needs a 128K Apple with /RAM empty, and room on the disk for two work files (RETRODB.TMP, and RETRODB.SWP when the database is large) that RetroDB removes when it is done. If an ODS file can't be read, open it in your spreadsheet program, save it as CSV, and import that instead.
+
+### Making a database from a spreadsheet
+
+You can turn any ODS or CSV file into a new database. Choose New Database, click Cancel in the Design Form window, and then choose Import ODS or CSV. Because the new database has no form, RetroDB offers to **Create** one from the file:
 
 - Each heading in row 1 becomes a field (up to 16), all of them in the list. Columns headed No. and Part Of become fields of those types (Chapter 9).
-- A column of plain numbers becomes a Number field; numbers shown as dollars, or with cents, make a Money field.
+- A column of plain numbers becomes a Number field; amounts with a dollar sign or with cents make a Money field.
 - A column of dates becomes a Date field, and a column of Yes and No (or Y, N, True, False) a Yes/No field.
 - Anything else becomes a Text field, as long as the longest entry plus 10 characters, up to 56.
 
 Afterward, choose Design Form to rename fields, adjust lengths, or take fields out of the list, then save the new database with Save As.
 
-> **By the Way:** If a sheet has more rows than fit in memory, RetroDB imports as many as fit and tells you that some rows did not fit.
+> **By the Way:** If a file has more rows than fit in memory, RetroDB imports as many as fit and tells you that some rows did not fit.
+
+### Mouse Calc
+
+RetroDB 1.1 exchanged sheets with Mouse Calc 1.1 directly. RetroDB 1.2 uses ODS and CSV in their place, which modern computers can open. To bring records into Mouse Calc 2.0, export a CSV file and use Mouse Calc's CSV import; to bring a Mouse Calc sheet into RetroDB, export it from Mouse Calc 2.0 as CSV. If you have sheets made by RetroDB 1.1, open them in Mouse Calc 2.0 and save them as CSV.
 
 ## Chapter 9: Records Inside Records
 
-RetroDB 1.1 can keep track of what is inside what: the cards in a computer, the drive on its controller card, the box on a shelf in the closet and everything in the box. Any record can be inside another record, to any depth.
+Since version 1.1, RetroDB can keep track of what is inside what: the cards in a computer, the drive on its controller card, the box on a shelf in the closet and everything in the box. Any record can be inside another record, to any depth.
 
 The COLLECTION sample works this way. Open it to follow along.
 
@@ -502,11 +537,11 @@ Choose By Part Of from the Sort menu to see the database as a tree. Each record 
 - Beside No., numbers and ranges work as for a Number field, such as `10..20`.
 - The **Report** groups by Part Of when the form has one, so you can see how many things are in each computer or box and what they're worth. Each record counts in the group of the record it is directly inside.
 
-### Part Of and Mouse Calc
+### Part Of in ODS and CSV files
 
-- **Export** writes No. and Part Of as plain numbers, so the sheet keeps the links.
-- **Import with Replace** keeps the numbers from the sheet.
-- **Import with Add** moves the sheet's numbers past the largest No. already in use. The new records keep their links to each other, and any repeated number is replaced with a free one.
+- **Export** writes No. and Part Of as plain numbers, so the spreadsheet keeps the links.
+- **Import with Replace** keeps the numbers from the file.
+- **Import with Add** moves the file's numbers past the largest No. already in use. The new records keep their links to each other, and any repeated number is replaced with a free one.
 - **Create** makes columns headed No. and Part Of into fields of those types, so a database exported from RetroDB comes back with its tree.
 
 > **Important!** MouseDB 1.0, the first version of RetroDB, can't open a database that has a No. or Part Of field. Use RetroDB 1.1 or later for those databases.
@@ -526,8 +561,8 @@ Open-Apple commands work from the main screen. Solid-Apple (Option on the IIGS) 
 | File | Save As… |  | Saves under a new name |
 | File | Revert to Saved |  | Reloads the database from the disk |
 | File | Design Form… |  | Sets up or changes the fields |
-| File | Import from Mouse Calc… | Open-Apple-I | Reads rows from a Mouse Calc sheet |
-| File | Export to Mouse Calc… | Open-Apple-X | Writes the list as a Mouse Calc sheet |
+| File | Import ODS or CSV… | Open-Apple-I | Reads rows from an ODS or CSV file |
+| File | Export ODS or CSV… | Open-Apple-X | Writes the list as an ODS or CSV file |
 | File | Quit | Open-Apple-Q | Leaves RetroDB |
 | Record | New Record… | Open-Apple-N | Adds a record |
 | Record | Edit Record… | Open-Apple-E or RETURN | Changes the selected record |
@@ -570,31 +605,38 @@ Messages are listed alphabetically by their first words. The messages about No. 
 | Message | What it means | What to do |
 | --- | --- | --- |
 | A database with that name already exists. Replace it? | Save As found a database with the name you typed. | Click Replace to write over it, or Cancel and choose another name. |
-| A Mouse Calc sheet with that name already exists. Replace it? | Export found a sheet with that name. | Click Replace, or Cancel and choose another name. |
+| A file with that name already exists. Replace it? | Export found a file with the name you typed. | Click Replace, or Cancel and choose another name. |
 | A ProDOS name starts with a letter… | The name you typed can't be a ProDOS file name. | Use up to 15 letters, digits and periods, starting with a letter. |
 | A Text field holds 1 to 56 characters. | A length in Design Form is out of range. | Type a length from 1 to 56. |
-| Could not export the sheet. / Could not open the database. / Could not save the database. / Could not read the sheet. | A disk error stopped the job. The second line names it: the disk is write-protected, the disk is full, disk I/O error, or a ProDOS error number. | Fix the problem and try again. When saving, the file on disk was not changed. |
+| Could not export the file. / Could not open the database. / Could not save the database. / Could not read the file. | A disk error stopped the job. The second line names it: the disk is write-protected, the disk is full, disk I/O error, or a ProDOS error number. | Fix the problem and try again. When saving, the file on disk was not changed. |
 | Delete this record? | You chose Delete Record. | Click Delete, or Cancel. |
 | Delete the 4 selected records? / Delete all 14 records? | You chose Delete Selected. | Click Delete, or Cancel. This can't be undone except by Revert to Saved. |
 | Discard your changes and reload the database from disk? | You chose Revert to Saved. | Click Revert, or Cancel. |
-| Import the sheet's rows into this database? | The database has a form but no records yet. | Click Import, or Cancel. |
+| Export the records in the list as an ODS spreadsheet… or as plain CSV text? | You chose Export. | Click ODS or CSV, or Cancel. |
+| Import the file's rows into this database? | The database has a form but no records yet. | Click Import, or Cancel. |
 | It isn't a RetroDB database. | The file chosen isn't in RetroDB's format. | Choose another file. |
-| Make a new database from this sheet? | You're importing into a database with no form. | Click Create to make fields from the sheet's headings (Chapter 8). |
+| Make a new database from this file? | You're importing into a database with no form. | Click Create to make fields from the file's headings (Chapter 8). |
 | No record matches that text. | Find or Find Next found nothing. | Check the spelling, or choose Show All Records if only some records are showing. |
 | No records match. | No record fits the Select Records criteria. | Change the criteria, or choose Show All Records. |
-| None of the headings in row 1 of that sheet match the fields of this database. | Import found no column to use. | Make row 1 of the sheet hold the field names, or import into a new database. |
+| None of the headings in row 1 of that file match the fields of this database. | Import found no column to use. | Make row 1 of the spreadsheet hold the field names, or import into a new database. |
 | Please add at least one field | The form is empty. | Type a field name in the first row. |
 | Please fill in at least one field | The record is blank. | Type something, or press ESC. |
 | Please give every field a name | A field row has a type but no name. | Name it, or delete the row with Open-Apple-D. |
 | Please type a whole number / an amount / a date in (field) | A field holds something its type can't use. | Correct it, or clear it with CONTROL-X. |
-| Row 1 of that sheet has no headings to make fields from. | Create found no text in row 1. | Put a heading over each column in Mouse Calc. |
+| RETRODB.OVL is missing. | The import and export code isn't next to RETRODB.SYSTEM. | Copy RETRODB.OVL from the RetroDB disk into the same folder. |
+| Row 1 of that file has no headings to make fields from. | Create found no text in row 1. | Put a heading over each column in your spreadsheet program. |
 | Save changes to (name) before closing it? | The database has unsaved changes. | Save, Don't Save, or Cancel (Chapter 7). |
-| That name belongs to a file that is not a database / not a Mouse Calc sheet. | The name is taken by another kind of file. | Choose another name. |
+| That file isn't an ODS spreadsheet, or it uses a kind of compression RetroDB can't read. | The file isn't a ZIP archive holding content.xml, or it was packed with an unusual method. | Save it again from your spreadsheet program, or save it as CSV. |
+| That name belongs to a database or to one of RetroDB's own files. | Export won't write over them. | Choose another name. |
+| That name belongs to a file that is not a database. | Save As found another kind of file with that name. | Choose another name. |
+| That ODS file couldn't be read. It may be damaged. | The compressed data or the XML inside isn't right. | Save it again from your spreadsheet program, or save it as CSV. |
 | The database is full. | No more records fit in memory. | Shorten fields or start another database. |
 | The number in (field) is too large. | It is beyond the field's range. | The largest Number is 999,999,999 and the largest amount $9,999,999.99. |
 | The record is longer than 255 bytes. | The fields of the form add up to more than 255 bytes. | Make some Text fields shorter. |
 | There are no databases in this folder yet. | Open found no databases. | Choose New Database. |
-| There are no Mouse Calc sheets in this folder. | Import found no sheets. | Copy a sheet into the RetroDB folder. |
+| There are no CSV or ODS files in this folder. | Import found no files whose names end in .CSV or .ODS. | Copy one into the RetroDB folder. |
+| There isn't memory to read an ODS file now… | Reading ODS needs a 128K Apple with /RAM empty, and the database's records out of main memory. | Save the file as CSV and import that, or free /RAM. |
+| There isn't room on the disk to set the records aside while the ODS file is read. | The disk is too full for RETRODB.SWP. | Free some space, or import a CSV file instead. |
 | This changes all (n) records. | You changed the form of a database with records. | Click Change to go ahead, or Cancel (Chapter 3). |
 | This database has more records than fit… | The file holds more records than memory has room for. Only the first ones were loaded. | It opens as Untitled so the file isn't shortened. Free /RAM, or save part of it under a new name. |
 | This file doesn't hold the number of records it says… | The file may be damaged. | It opens as Untitled; check the records and save under a new name. |
@@ -622,9 +664,10 @@ Messages are listed alphabetically by their first words. The messages about No. 
 | Number field | -999,999,999 to 999,999,999 |
 | Money field | -$9,999,999.99 to $9,999,999.99 |
 | Dates | Years 1000 to 2999 |
-| Databases or sheets in the Open and Import lists | 14 |
+| Databases, or ODS and CSV files, in the Open and Import lists | 14 |
+| Rows and columns read from an ODS file | 255 rows, 63 columns |
 | Report groups | 9, plus All others |
-| Database and sheet names | 15 characters, ProDOS rules |
+| Database and file names | 15 characters, ProDOS rules |
 | Record numbers (No.) | 1 to 999 |
 | Levels of Part Of | Any; up to 10 are shown indented |
 
@@ -640,7 +683,7 @@ Messages are listed alphabetically by their first words. The messages about No. 
 
 ### Memory
 
-RETRODB.SYSTEM loads at $2000, where its Mouse Calc and file-list code stays. While the title screen is up, RetroDB puts that code aside in auxiliary memory and unpacks the title picture in its place; afterwards the memory that held the packed picture holds the No. tables and records. Records live in the auxiliary 64K from $0800 to $BFFF, reached with the AUXMOVE routine, with leftover room in main memory used too. When /RAM is empty, RetroDB disconnects it as Apple's ProDOS Technical Note #10 describes, and reconnects and formats it on Quit.
+RETRODB.SYSTEM loads at $2000, where its file-list code stays. Import and export run as overlays read from RETRODB.OVL into $2900-$3FFF when you use them. To read an ODS file, RetroDB unpacks it through a 32K window in auxiliary memory, setting aside any records stored there in RETRODB.SWP and bringing them back afterwards. While the title screen is up, RetroDB puts that code aside in auxiliary memory and unpacks the title picture in its place; afterwards the memory that held the packed picture holds the No. tables and records. Records live in the auxiliary 64K from $0800 to $BFFF, reached with the AUXMOVE routine, with leftover room in main memory used too. When /RAM is empty, RetroDB disconnects it as Apple's ProDOS Technical Note #10 describes, and reconnects and formats it on Quit.
 
 ### The database file
 
@@ -665,19 +708,23 @@ RETRODB1
 - Each field is a line of name, type (1 Text, 2 Number, 3 Money, 4 Date, 5 Yes/No, 6 No., 7 Part Of), length (for Text, the length you chose; for other types, the width of the column) and In list (1 or 0).
 - Then comes the number of records, and each record as one quoted line per field. Numbers are written plainly (`1985`, `-5`), Money with two decimals (`125.50`), dates as YYYY-MM-DD, and Yes/No as `Yes`, `No` or empty. No. and Part Of are written as numbers, and empty when blank.
 
-### Mouse Calc sheets
+### ODS and CSV files
 
-Mouse Calc sheets are ProDOS files of type $F8. RetroDB writes Mouse Calc 1.1's 2,179-byte program header, followed by the cells column by column: text cells, number cells in Mouse Calc's decimal format, and SUM formulas with their values already worked out. On import, RetroDB reads text cells, numbers and the cached values of formulas.
+An exported ODS file is a ZIP archive (ProDOS type BIN, $06) holding three files, stored without compression: `mimetype`, `META-INF/manifest.xml`, and `content.xml`, which holds the table. Its date and time come from the ProDOS clock. A CSV file is ProDOS type TXT ($04).
+
+On import, RetroDB finds content.xml through the ZIP archive's central directory and unpacks it (stored, or compressed with Deflate, as every spreadsheet program writes). It reads the XML as it goes, turning the first table into CSV rows in RETRODB.TMP, which it then imports like any CSV file.
 
 ### Files RetroDB uses
 
 | File | Purpose |
 | --- | --- |
 | RETRODB.SYSTEM | The program |
+| RETRODB.OVL | Import and export code |
 | RETRODB.LAST | The name of the last database used |
 | RETRODB.SAVING | A temporary file during Save; it is renamed when the save is complete |
 | Your databases | TXT files beginning with RETRODB1 (or MOUSEDB1) |
-| Your sheets | $F8 Mouse Calc files |
+| RETRODB.TMP, RETRODB.SWP | Work files while an ODS file is imported; removed afterwards |
+| Your spreadsheets | ODS files (BIN, $06) and CSV files (TXT, $04) |
 
 ## Appendix D: Troubleshooting
 
@@ -689,27 +736,32 @@ Mouse Calc sheets are ProDOS files of type $F8. RetroDB writes Mouse Calc 1.1's 
 | Save fails with "The disk is write-protected." | The startup disk is locked. | Use a copy that isn't write-protected. |
 | Save fails with "The disk is full." | No room for the database and its temporary copy. | Delete unneeded files, or copy RetroDB to a larger disk. |
 | A database isn't in the Open list. | It's in another folder, isn't a RetroDB file, or more than 14 are in the folder. | Copy it next to RETRODB.SYSTEM; move some databases to another folder. |
-| A Mouse Calc sheet isn't in the Import list. | It's in another folder, or isn't a $F8 Mouse Calc file. | Save it from Mouse Calc into the RetroDB folder. |
+| A spreadsheet isn't in the Import list. | It's in another folder, or its name doesn't end in .ODS or .CSV. | Copy it into the RetroDB folder with a name ending in .ODS or .CSV. |
+| Export or Import says RETRODB.OVL is missing. | RETRODB.SYSTEM was copied without it. | Copy RETRODB.OVL next to RETRODB.SYSTEM. |
+| An exported ODS file didn't fit on the disk. | ODS files are not compressed. | Export to a larger disk, export fewer records, or use CSV. |
+| Numbers from a European spreadsheet came in wrong. | The CSV file uses commas between values and in numbers. | Save it with semicolons between values, or as ODS. |
 | Import brought in blank columns. | The headings don't match the field names. | Rename the field or the heading so they match. |
 | A column I want doesn't show in the list. | It isn't marked In list, or the columns are wider than 80 characters. | In Design Form, mark it In list, shorten Text fields, or take other fields out of the list. |
 | RetroDB starts with Untitled instead of my database. | RETRODB.LAST is missing or names a file that isn't there. | Open your database; RetroDB will remember it from then on. |
-| Part Of shows a number with a question mark, such as No. 12? | No record has that No., for example after importing part of a sheet. | Open the record and choose the right one in Part Of, or clear it with CONTROL-X. |
+| Part Of shows a number with a question mark, such as No. 12? | No record has that No., for example after importing part of a spreadsheet. | Open the record and choose the right one in Part Of, or clear it with CONTROL-X. |
 
 ## Glossary
 
 - **Criterion:** what you type beside a field in Select Records to say which records you want.
 - **Database:** a set of records that share one form, kept in one file.
-- **Export:** to write records out to another program's file, here a Mouse Calc sheet.
+- **CSV:** comma-separated values, a plain text file with one row of a table on each line.
+- **Export:** to write records out to another program's file, here an ODS or CSV file.
 - **Field:** one blank of a form, such as Name or Value, with a type and a length.
 - **Form:** the list of fields that every record in a database has.
 - **Import:** to read records in from another program's file.
 - **In list:** a field shown as a column of the main list.
+- **ODS:** OpenDocument Spreadsheet, the file format of LibreOffice Calc, read by most spreadsheet programs.
 - **MouseText:** the set of small pictures, such as the apple and the arrows, that the enhanced Apple II can show in text.
 - **ProDOS:** the Apple II disk operating system that RetroDB runs under.
 - **/RAM:** the RAM disk ProDOS makes from a 128K Apple's auxiliary memory.
 - **Record:** one filled-in form.
 - **Selection:** the records that match the Select Records criteria, shown in place of the whole database.
-- **Sheet:** a Mouse Calc spreadsheet file.
+- **Spreadsheet:** a table of rows and columns in a program such as LibreOffice Calc or Excel.
 - **No.:** a record number from 1 to 999 that RetroDB gives each record and never changes.
 - **Part Of:** a field that holds the No. of the record this one is inside.
 - **Tree order:** the list sorted By Part Of, with each record followed by the records inside it.
